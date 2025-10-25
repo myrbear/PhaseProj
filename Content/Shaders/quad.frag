@@ -1,8 +1,10 @@
+
 #version 450 core
 
-in vec4 vertexColor;
-out vec4 outputColor;
+in vec4 _VertexColor;
+out vec4 _OutputColor;
 
 void main() {
-	outputColor = vertexColor;
+
+	_OutputColor = _VertexColor;
 }

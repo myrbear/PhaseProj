@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
@@ -7,15 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PhaseProj {
+
     public class Quad {
+
         public int[] _Indices;
         public float[] _Vertices;
         public int _VAO;
         public int _VBO;
         public int _EBO;
         private Shader _Shader;
+        private GameObject _Parent;
 
-        public Quad() {
+        public Quad(GameObject parent) {
+
+            _Parent = parent;
             _Indices = new int[]
                 {
                     2, 1, 0,
@@ -59,10 +65,12 @@ namespace PhaseProj {
             _Shader = new Shader();
         }
         ~Quad() {
+
             Console.WriteLine("Quad not disposed.");
         }
 
         public void Dispose() {
+
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             GL.DeleteBuffer(_EBO);
 
@@ -75,8 +83,15 @@ namespace PhaseProj {
             GC.SuppressFinalize(this);
         }
         public void Draw() {
+            
             GL.BindVertexArray(_VAO);
             GL.UseProgram(_Shader._Handle);
+
+            int transformLoc = GL.GetUniformLocation(_Shader._Handle, "_Transform");
+            Matrix4 mat = _Parent.GetTransform()._Transform;
+
+            GL.UniformMatrix4(transformLoc, false, ref mat);
+
             GL.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, _Indices.Length, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
         }

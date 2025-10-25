@@ -1,9 +1,13 @@
+
 #version 330 core
 
-layout (location = 0) in vec3 aPosition;
-out vec4 vertexColor; // specify a color output to the fragment shader
+uniform mat4 _Transform;
+
+layout (location = 0) in vec3 _Position;
+out vec4 _VertexColor;
 
 void main(void) {    
-    vertexColor = vec4(1, 1, 1, 1);
-    gl_Position = vec4(aPosition, 1.0);
+
+    _VertexColor = vec4(1, 1, 1, 1);
+    gl_Position =  _Transform * vec4(_Position, 1.0);
 }

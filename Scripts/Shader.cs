@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿
+using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,10 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PhaseProj {
+
     public class Shader {
+
         public int _Handle;
 
         public Shader() {
+
             // loading source code of vertex and fragment shaders as strings
 
             Assembly assembly = Assembly.GetEntryAssembly()!;
@@ -70,8 +74,6 @@ namespace PhaseProj {
 
             GL.DeleteShader(vertexShader);
             GL.DeleteShader(fragmentShader);
-
-
         }
     }
 }
