@@ -7,7 +7,7 @@ class GameObject
         GameObject();
 
     private:
-}
+};
 
 
 
