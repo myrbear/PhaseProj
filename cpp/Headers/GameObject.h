@@ -4,8 +4,10 @@
 class GameObject
 {
     public:
-        GameObject();
-
+        GameObject(int _x, int _y);
+        
+        int x;
+        int y;
     private:
 };
 
