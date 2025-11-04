@@ -23,7 +23,7 @@ class ObjectBuffer {
                 ObjectIterator(GameObject** _ptr, GameObject** _end_ptr) : ptr(_ptr), end_ptr(_end_ptr) {}
 
                 GameObject* operator*() const { return *ptr; }
-                GameObject* operator->() { return *ptr; }
+                GameObject** operator->() { return ptr; }
 
                 // Prefix increment
                 ObjectIterator& operator++() {

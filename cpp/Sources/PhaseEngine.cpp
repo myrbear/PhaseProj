@@ -6,15 +6,18 @@ PhaseEngine::PhaseEngine() {
 
 
 void PhaseEngine::Run() {
-    printf("Engine Running\n");
+    std::cout << "Engine Running" << std::endl;
     
-    CreateObject(0, 0);
-    CreateObject(1, 0);
-    CreateObject(2, 0);
+    GameObject* obj1 = CreateObject(0, 0);
+    GameObject* obj2 = CreateObject(1, 0);
+    GameObject* obj3 = CreateObject(2, 0);
+
+    DeleteObject(obj2);
     
     for(auto it = BeginObjIt(); it != EndObjIt(); it++)
     {
-        printf("Gameobject at (%i,%i)\n", it->x, it->y);
+        GameObject* obj_ptr = *it;
+        std::cout << "GameObject at (" << obj_ptr->x << "," << obj_ptr->y << ")" << std::endl;
     }
 }
 
@@ -22,7 +25,7 @@ void PhaseEngine::Run() {
 GameObject* PhaseEngine::CreateObject(int x, int y) {
     // Check buffer capacity
     if(object_buffer.Full()) {
-        printf("ERROR: Object limit reached, cannot create another object.\n");
+        std::cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
         return NULL;
     }
     else {

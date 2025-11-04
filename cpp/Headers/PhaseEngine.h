@@ -2,6 +2,7 @@
 #define PHASE_ENGINE
 
 #include "stdio.h"
+#include <iostream>
 #include "../Headers/GameObject.h"
 #include "../Headers/ObjectBuffer.h"
 
