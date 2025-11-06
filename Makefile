@@ -1,5 +1,23 @@
-all:
-	g++ src/collider.cpp -o bin/main.out	
-run:
-	./bin/main.out
+CC = g++
+CFLAGS = -Wall -O2
 
+# List all source files here
+SRC = 	PhaseEngine.cpp \
+		GameObject.cpp \
+		ObjectBuffer.cpp \
+		collider.cpp \
+		vector.cpp \
+		quaternion.cpp
+
+# Automatically generate object files
+OBJ = $(SRC:.cpp=.o)
+
+all: $(OBJ)
+
+# Compile each .cpp file into .o
+%.o: cpp/Sources/%.cpp
+	$(CC) -c $< -o bin/$@ $(CFLAGS)
+
+# Clean up object files and executable
+clean:
+	rm -f $(OBJ) $(TARGET)
