@@ -1,20 +1,26 @@
 #ifndef PHASE_ENGINE
 #define PHASE_ENGINE
 
-#include "stdio.h"
 #include <iostream>
+#include <thread>
+#include <mutex>
 #include "../Headers/GameObject.h"
 #include "../Headers/ObjectBuffer.h"
+
+using namespace std;
 
 class PhaseEngine {
     public:
         PhaseEngine();
         void Run();
+        void Stop();
         GameObject* CreateObject();
         void DeleteObject(GameObject* ptr);
         // For external use (ALEX)
         ObjectBuffer::ObjectIterator BeginObjIt();
         ObjectBuffer::ObjectIterator EndObjIt();
+
+        bool IsRunning();
 
     private:
         // Main phyisics loop
@@ -24,6 +30,12 @@ class PhaseEngine {
         ObjectBuffer::ObjectIterator EndPhysIt();
 
         ObjectBuffer object_buffer;
+
+        // Threading
+        void RunPhysicsThread();
+        thread physics_thread;
+        bool engine_running = false;
+        mutex running_mtx;
 };
 
 #endif

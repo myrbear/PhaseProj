@@ -4,17 +4,66 @@ PhaseEngine::PhaseEngine() {
     object_buffer = ObjectBuffer();
 }
 
-
+// Call to start engine
 void PhaseEngine::Run() {
-    std::cout << "Engine Running" << std::endl;
-    
+    running_mtx.lock();
+    if(engine_running) {
+        cout << "Engine already running!" << endl;
+    }
+    else {
+        // Start engine
+        physics_thread = thread(&PhaseEngine::RunPhysicsThread, this);
+        cout << "Engine Running" << std::endl;
+        engine_running = true;
+    }
+    running_mtx.unlock();
+}
+
+
+// Call to stop engine
+void PhaseEngine::Stop() {
+    running_mtx.lock();
+    if(engine_running) {
+        // Stop engine
+        engine_running = false;
+        running_mtx.unlock();
+        physics_thread.join();
+        cout << "Engine Stopped" << endl;
+    }
+    else {
+        cout << "Engine is not running" << endl;
+        running_mtx.unlock();
+    }
+}
+
+
+bool PhaseEngine::IsRunning() {
+    bool result;
+    running_mtx.lock();
+    result = engine_running;
+    running_mtx.unlock();
+    return result;
+}
+
+
+// This is the thread that performs the physics calculation loop
+void PhaseEngine::RunPhysicsThread() {
+    cout << "Physics thread started" << endl;
+
+    while(IsRunning()) {
+        // Calculate time
+
+        SimulatePhysics(1);
+    }
+
+    cout << "Physics thread ended" << endl;
 }
 
 
 GameObject* PhaseEngine::CreateObject() {
     // Check buffer capacity
     if(object_buffer.Full()) {
-        std::cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
+        cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
         return NULL;
     }
     else {
