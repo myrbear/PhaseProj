@@ -1,14 +1,18 @@
 #ifndef GAME_OBJECT
+
+#include "../Headers/collider.h"
+
+
 #define GAME_OBJECT
 
 class GameObject
 {
     public:
-        GameObject(int _x, int _y);
+        GameObject();
+        Collider collider;
         
-        int x;
-        int y;
     private:
+
 };
 
 

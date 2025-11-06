@@ -10,28 +10,26 @@
 
 #include <iostream>
 #include <stdint.h>
-#include <vector.h>
+#include "../Headers/vector.h"
 
 using namespace std;
 
-Vector init_vec() {
+Vector::Vector() : _x(0), _y(0), _z(0) {}
 
-	Vector vec;
-
-	vec._x = 0;
-	vec._y = 0;
-	vec._z = 0;
-
-	return vec;
-}
+Vector::Vector(int x, int y, int z) : _x(x), _y(y), _z(z) {}
 
 Vector cross(Vector* a, Vector* b) {
 	
 	Vector result;
 
-	result._x =   ( a._y * b._z - a._z * b._y );
-	result._y = - ( a._x * b._z - a._z * b._x );
-	result._z =   ( a._x * b._y - a._y * b._x );
+	result._x =   ( a->_y * b->_z - a->_z * b->_y );
+	result._y = - ( a->_x * b->_z - a->_z * b->_x );
+	result._z =   ( a->_x * b->_y - a->_y * b->_x );
 	
 	return result;
+}
+
+
+float dot() {
+
 }

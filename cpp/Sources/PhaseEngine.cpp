@@ -8,21 +8,10 @@ PhaseEngine::PhaseEngine() {
 void PhaseEngine::Run() {
     std::cout << "Engine Running" << std::endl;
     
-    GameObject* obj1 = CreateObject(0, 0);
-    GameObject* obj2 = CreateObject(1, 0);
-    GameObject* obj3 = CreateObject(2, 0);
-
-    DeleteObject(obj2);
-    
-    for(auto it = BeginObjIt(); it != EndObjIt(); it++)
-    {
-        GameObject* obj_ptr = *it;
-        std::cout << "GameObject at (" << obj_ptr->x << "," << obj_ptr->y << ")" << std::endl;
-    }
 }
 
 
-GameObject* PhaseEngine::CreateObject(int x, int y) {
+GameObject* PhaseEngine::CreateObject() {
     // Check buffer capacity
     if(object_buffer.Full()) {
         std::cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
@@ -30,7 +19,7 @@ GameObject* PhaseEngine::CreateObject(int x, int y) {
     }
     else {
         // Create Object
-        GameObject* new_obj = new GameObject(x, y);
+        GameObject* new_obj = new GameObject();
         // Add to buffer
         object_buffer.Add(new_obj);
         return new_obj;
@@ -53,4 +42,21 @@ ObjectBuffer::ObjectIterator PhaseEngine::BeginObjIt() {
 
 ObjectBuffer::ObjectIterator PhaseEngine::EndObjIt() {
     return object_buffer.end();
+}
+
+ObjectBuffer::ObjectIterator PhaseEngine::BeginPhysIt() {
+    return object_buffer.begin();
+}
+
+ObjectBuffer::ObjectIterator PhaseEngine::EndPhysIt() {
+    return object_buffer.end();
+}
+
+
+void PhaseEngine::SimulatePhysics(float deltaTime) {
+    // Example iterator loop
+    for(auto it = BeginPhysIt(); it != EndPhysIt(); it++) {
+        // Dereference iterator for object pointer
+        GameObject* gameObject = *it;
+    }
 }

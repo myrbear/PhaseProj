@@ -10,12 +10,19 @@ class PhaseEngine {
     public:
         PhaseEngine();
         void Run();
-        GameObject* CreateObject(int x, int y);
+        GameObject* CreateObject();
         void DeleteObject(GameObject* ptr);
+        // For external use (ALEX)
         ObjectBuffer::ObjectIterator BeginObjIt();
         ObjectBuffer::ObjectIterator EndObjIt();
 
     private:
+        // Main phyisics loop
+        void SimulatePhysics(float deltaTime);
+        // For physics calculations (MYRON)
+        ObjectBuffer::ObjectIterator BeginPhysIt();
+        ObjectBuffer::ObjectIterator EndPhysIt();
+
         ObjectBuffer object_buffer;
         int integer;
 };
