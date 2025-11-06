@@ -10,13 +10,13 @@ SRC = 	PhaseEngine.cpp \
 		quaternion.cpp
 
 # Automatically generate object files
-OBJ = $(SRC:.cpp=.o)
+OBJ = $(SRC:%.cpp=bin/%.o)
 
 all: $(OBJ)
 
 # Compile each .cpp file into .o
-%.o: cpp/Sources/%.cpp
-	$(CC) -c $< -o bin/$@ $(CFLAGS)
+bin/%.o: cpp/Sources/%.cpp
+	$(CC) -c $< -o $@ $(CFLAGS)
 
 # Clean up object files and executable
 clean:
