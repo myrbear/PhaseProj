@@ -17,7 +17,6 @@ class PhaseEngine {
 
     private:
         ObjectBuffer object_buffer;
-        int integer;
 };
 
 #endif
