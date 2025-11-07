@@ -7,6 +7,15 @@
 #include "../Headers/GameObject.h"
 #include "../Headers/ObjectBuffer.h"
 
+// Windows
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#include <mmsystem.h>
+#undef byte
+
+#define FRAME_RATE 60
+
 using namespace std;
 
 class PhaseEngine {

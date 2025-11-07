@@ -13,7 +13,7 @@ void PhaseEngine::Run() {
     else {
         // Start engine
         physics_thread = thread(&PhaseEngine::RunPhysicsThread, this);
-        cout << "Engine Running" << std::endl;
+        cout << "Engine Running" << endl;
         engine_running = true;
     }
     running_mtx.unlock();
@@ -48,15 +48,37 @@ bool PhaseEngine::IsRunning() {
 
 // This is the thread that performs the physics calculation loop
 void PhaseEngine::RunPhysicsThread() {
-    cout << "Physics thread started" << endl;
+    auto frame_time = chrono::microseconds(1000000 / FRAME_RATE);
+    // auto next_frame = chrono::steady_clock::now();
+    int i = 0;
+    int overshot_frames = 0;
+
+    // Make windows schedule tasks every 1ms instead of ~15ms
+    timeBeginPeriod(1);
 
     while(IsRunning()) {
-        // Calculate time
+    
+        auto loop_start = chrono::steady_clock::now();
 
-        SimulatePhysics(1);
+        // Run physics calculations
+        SimulatePhysics(frame_time.count());
+
+        // Hybrid sleep
+        // Sleep for 500us until within 1ms of next frame
+        auto next_frame = loop_start + frame_time;
+        while(chrono::steady_clock::now() + chrono::milliseconds(1) < next_frame) {
+            this_thread::sleep_for(chrono::microseconds(500));
+        }
+
+        // Busy wait until next frame
+        while(chrono::steady_clock::now() < next_frame) {;}
+
+        int duration = chrono::duration_cast<chrono::microseconds>(chrono::steady_clock::now() - loop_start).count();
+        i++;
+        if(duration > 17000) { overshot_frames++; }
     }
 
-    cout << "Physics thread ended" << endl;
+    timeEndPeriod(1);
 }
 
 
