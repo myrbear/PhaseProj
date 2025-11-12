@@ -16,24 +16,21 @@ using namespace std;
 
 Collider::Collider() {
 	
-	_verts = {
-		new Vector(-1, -1, -1),
-		new Vector(-1, -1, 1),
-
-		new Vector(-1, 1, -1),
-		new Vector2(-1, 1, 1),
-
-		new Vector(1, -1, -1),
-		new Vector(1, -1, 1),
-
-		new Vector(1, 1, -1),
-		new Vector(1, 1, 1)
-	};
-	_pos = new Vector(0, 0, 0);	
+	_pos = new Vector(0, 0, 0);
+	_verts[0] = new Vector(-1, -1, -1);
+	_verts[1] = new Vector(-1, -1, 1);
+	_verts[2] = new Vector(-1, 1, -1;
+	_verts[3] = new Vector(-1, 1, 1);
+	_verts[4] = new Vector(1, -1, -1);
+	_verts[5] = new Vector(1, -1, 1);
+	_verts[6] = new Vector(1, 1, -1);
+	_verts[7] = new Vector(1, 1, 1);
 }
 
-Vector[][] Collider::getFaces(Vector polytope[], int len) {
+Vector[][] getFaces(Vector* polytope, int len) {
 	
+	// take a list of verts, return lists of lists of 3 verts (faces)
+
 	Vector tris[len / 3][3];
 
 	if (len > 0) {
