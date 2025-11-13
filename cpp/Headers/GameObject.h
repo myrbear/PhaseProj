@@ -8,10 +8,13 @@
 class GameObject
 {
     public:
-        GameObject();
+        GameObject(int id);
         Collider collider;
+
+        int GetId();
         
     private:
+        int id;
 
 };
 

@@ -1,48 +1,39 @@
 #include "../Headers/PhaseEngine.h"
 
 PhaseEngine::PhaseEngine() {
-    object_buffer = ObjectBuffer();
+    engine_running.store(false);
 }
 
 // Call to start engine
 void PhaseEngine::Run() {
-    running_mtx.lock();
-    if(engine_running) {
-        cout << "Engine already running!" << endl;
+    if(engine_running.load()) {
+        cout << "PHASE Engine is already running!" << endl;
     }
     else {
         // Start engine
+        engine_running.store(true);
         physics_thread = thread(&PhaseEngine::RunPhysicsThread, this);
-        cout << "Engine Running" << endl;
-        engine_running = true;
+        cout << "PHASE Engine Running" << endl;
     }
-    running_mtx.unlock();
 }
 
 
 // Call to stop engine
 void PhaseEngine::Stop() {
-    running_mtx.lock();
-    if(engine_running) {
+    if(engine_running.load()) {
         // Stop engine
-        engine_running = false;
-        running_mtx.unlock();
+        engine_running.store(false);
         physics_thread.join();
-        cout << "Engine Stopped" << endl;
+        cout << "PHASE Engine Stopped" << endl;
     }
     else {
-        cout << "Engine is not running" << endl;
-        running_mtx.unlock();
+        cout << "PHASE Engine is not running" << endl;
     }
 }
 
 
 bool PhaseEngine::IsRunning() {
-    bool result;
-    running_mtx.lock();
-    result = engine_running;
-    running_mtx.unlock();
-    return result;
+    return engine_running.load();
 }
 
 
@@ -50,18 +41,31 @@ bool PhaseEngine::IsRunning() {
 void PhaseEngine::RunPhysicsThread() {
     auto frame_time = chrono::microseconds(1000000 / FRAME_RATE);
     // auto next_frame = chrono::steady_clock::now();
-    int i = 0;
-    int overshot_frames = 0;
+#ifdef DEBUG
+    long i = 0;
+    long overshot_frames = 0;
+#endif // DEBUG
 
     // Make windows schedule tasks every 1ms instead of ~15ms
     timeBeginPeriod(1);
 
-    while(IsRunning()) {
+    while(engine_running.load()) {
     
         auto loop_start = chrono::steady_clock::now();
 
+        object_buffer.SwapBuffers();
+
         // Run physics calculations
         SimulatePhysics(frame_time.count());
+        
+        // Test modifying GameObjects
+        
+        for(auto it = BeginPhysIt(); it != EndPhysIt(); it++) {
+            GameObject* obj = *it;
+            
+            obj->collider._pos._x += 1;
+            obj->collider._pos._y += 1;
+        }
 
         // Hybrid sleep
         // Sleep for 500us until within 1ms of next frame
@@ -73,54 +77,56 @@ void PhaseEngine::RunPhysicsThread() {
         // Busy wait until next frame
         while(chrono::steady_clock::now() < next_frame) {;}
 
+#ifdef DEBUG
         int duration = chrono::duration_cast<chrono::microseconds>(chrono::steady_clock::now() - loop_start).count();
         i++;
-        if(duration > 17000) { overshot_frames++; }
+        if(duration > frame_time.count()) { overshot_frames++; }
+#endif // DEBUG
+
     }
 
     timeEndPeriod(1);
+
+#ifdef DEBUG
+    cout << "Physics thread complete" << endl;
+    cout << "Overshot " << ((float)overshot_frames)/i*100 << "% of frames (" << overshot_frames << "/" << i << ")" << endl;
+#endif // DEBUG
 }
 
 
-GameObject* PhaseEngine::CreateObject() {
-    // Check buffer capacity
-    if(object_buffer.Full()) {
+int PhaseEngine::CreateObject() {
+    int id = object_buffer.CreateObject();
+    if(id == -1) {
         cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
-        return NULL;
     }
-    else {
-        // Create Object
-        GameObject* new_obj = new GameObject();
-        // Add to buffer
-        object_buffer.Add(new_obj);
-        return new_obj;
-    }
+    return id;
 }
 
 
-void PhaseEngine::DeleteObject(GameObject* ptr) {
-    // Remove object from buffer
-    if(object_buffer.Remove(ptr)) {
-        // Delete object
-        delete ptr;
+bool PhaseEngine::DeleteObject(int id) {
+    bool result = object_buffer.DeleteObject(id);
+    if(!result) {
+        cout << "ERROR: No object with id " << id << " found" << endl;
     }
+    return result;
 }
+
 
 ObjectBuffer::ObjectIterator PhaseEngine::BeginObjIt() {
-    return object_buffer.begin();
+    return object_buffer.read_begin();
 }
 
 
 ObjectBuffer::ObjectIterator PhaseEngine::EndObjIt() {
-    return object_buffer.end();
+    return object_buffer.read_end();
 }
 
 ObjectBuffer::ObjectIterator PhaseEngine::BeginPhysIt() {
-    return object_buffer.begin();
+    return object_buffer.write_begin();
 }
 
 ObjectBuffer::ObjectIterator PhaseEngine::EndPhysIt() {
-    return object_buffer.end();
+    return object_buffer.write_end();
 }
 
 

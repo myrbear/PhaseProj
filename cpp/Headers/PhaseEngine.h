@@ -4,6 +4,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <atomic>
 #include "../Headers/GameObject.h"
 #include "../Headers/ObjectBuffer.h"
 
@@ -16,6 +17,8 @@
 
 #define FRAME_RATE 60
 
+#define DEBUG
+
 using namespace std;
 
 class PhaseEngine {
@@ -23,8 +26,8 @@ class PhaseEngine {
         PhaseEngine();
         void Run();
         void Stop();
-        GameObject* CreateObject();
-        void DeleteObject(GameObject* ptr);
+        int CreateObject();
+        bool DeleteObject(int id);
         // For external use (ALEX)
         ObjectBuffer::ObjectIterator BeginObjIt();
         ObjectBuffer::ObjectIterator EndObjIt();
@@ -43,8 +46,7 @@ class PhaseEngine {
         // Threading
         void RunPhysicsThread();
         thread physics_thread;
-        bool engine_running = false;
-        mutex running_mtx;
+        atomic<bool> engine_running;
 };
 
 #endif

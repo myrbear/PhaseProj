@@ -1,6 +1,8 @@
 #include "../Headers/GameObject.h"
 
-GameObject::GameObject()
-{
-    
+GameObject::GameObject(int _id) : id(_id) {}
+
+
+int GameObject::GetId() {
+    return id;
 }
