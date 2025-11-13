@@ -1,23 +1,18 @@
-CC = g++
-CFLAGS = -Wall -O2
 
-# List all source files here
-SRC = 	PhaseEngine.cpp \
-		GameObject.cpp \
-		ObjectBuffer.cpp \
-		collider.cpp \
-		vector.cpp \
-		quaternion.cpp
+all: bin/program
 
-# Automatically generate object files
-OBJ = $(SRC:.cpp=.o)
+bin/program: bin/main.o bin/vector.o bin/collider.o bin/quaternion.o
+	g++ -o program bin/main.o bin/vector.o bin/collider.o bin/quaternion.o
 
-all: $(OBJ)
+bin/main.o: cpp/Sources/main.cpp cpp/Headers/collider.h cpp/Headers/vector.h cpp/Headers/quaternion.h
+	g++ -c cpp/Sources/main.cpp -o bin/main.o
 
-# Compile each .cpp file into .o
-%.o: cpp/Sources/%.cpp
-	$(CC) -c $< -o bin/$@ $(CFLAGS)
+bin/collider.o: cpp/Sources/collider.cpp cpp/Headers/collider.h cpp/Headers/vector.h cpp/Headers/quaternion.h
+	g++ -c cpp/Sources/collider.cpp -o bin/collider.o
 
-# Clean up object files and executable
-clean:
-	rm -f $(OBJ) $(TARGET)
+bin/vector.o: cpp/Sources/vector.cpp cpp/Headers/vector.h
+	g++ -c cpp/Sources/vector.cpp -o bin/vector.o
+
+bin/quaternion.o: cpp/Sources/quaternion.cpp cpp/Headers/quaternion.h
+	g++ -c cpp/Sources/quaternion.cpp -o bin/quaternion.o
+

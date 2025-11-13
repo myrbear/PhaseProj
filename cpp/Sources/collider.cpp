@@ -11,32 +11,34 @@
 #include "../Headers/collider.h"
 #include <iostream>
 #include <stdint.h>
+#include <cfloat>
 
 using namespace std;
 
-Collider::Collider() {
+void init_col(Collider* col) {
 	
-	_pos = new Vector(0, 0, 0);
-	_verts[0] = new Vector(-1, -1, -1);
-	_verts[1] = new Vector(-1, -1, 1);
-	_verts[2] = new Vector(-1, 1, -1;
-	_verts[3] = new Vector(-1, 1, 1);
-	_verts[4] = new Vector(1, -1, -1);
-	_verts[5] = new Vector(1, -1, 1);
-	_verts[6] = new Vector(1, 1, -1);
-	_verts[7] = new Vector(1, 1, 1);
+	init_vec( &( (*col)._pos      ),  0,  0,  0);
+	init_vec( &( (*col)._verts[0] ), -1, -1, -1);
+	init_vec( &( (*col)._verts[1] ), -1, -1,  1);
+	init_vec( &( (*col)._verts[2] ), -1,  1, -1);
+	init_vec( &( (*col)._verts[3] ), -1,  1,  1);
+	init_vec( &( (*col)._verts[4] ),  1, -1, -1);
+	init_vec( &( (*col)._verts[5] ),  1, -1,  1);
+	init_vec( &( (*col)._verts[6] ),  1,  1, -1);
+	init_vec( &( (*col)._verts[7] ),  1,  1,  1);
 }
 
-Vector[][] getFaces(Vector* polytope, int len) {
+Vector** gen_faces(Vector* polytope, int len) {
 	
 	// take a list of verts, return lists of lists of 3 verts (faces)
-
-	Vector tris[len / 3][3];
-
-	if (len > 0) {
 	
+	Vector** tris = new Vector*[len / 3];
+
+	if (len > 0) {		
+		
 		for (int i = 0; i < len - 2; i += 3) {
 			
+			tris[i / 3] = new Vector[3];
 			tris[i / 3][0] = polytope[i];
 			tris[i / 3][1] = polytope[i + 1];
 			tris[i / 3][2] = polytope[i + 2];
@@ -46,17 +48,27 @@ Vector[][] getFaces(Vector* polytope, int len) {
 	return tris;
 }
 
-Vector Collider::getFarthest(Vector* dir) {
+void delete_faces(Vector** polytope, int len) {
 
-	*dir = norm(dir);
+	for (int i = 0; i < len; i++) {
+		
+		delete[] polytope[i];
+	}
+
+	delete[] polytope;
+}
+
+Vector get_farthest(Collider col, Vector dir) {
+
+	dir = norm(dir);
 	
 	int targ_idx = 0;
-	float max_dot = MIN_FLOAT;
+	float max_dot = FLT_MIN;
 
 	for (int i = 0; i < VERT_COUNT; i++) {
-		Vector abt_origin = minus(_verts[i], _pos);
-		
-		float d = dot(&abt_origin, dir);
+	
+		Vector abt_origin = sub_vec(col._verts[i], col._pos);	
+		float d = dot(abt_origin, dir);
 		
 		if (d > max_dot) {
 			
@@ -65,35 +77,41 @@ Vector Collider::getFarthest(Vector* dir) {
 		}
 	}
 
-	return _verts[targ_idx];
+	return col._verts[targ_idx];
 }
 
-Vector Collider::support(Vector* dir, Collider* col) {
+Vector support(Collider col0, Collider col1, Vector dir) {
 	
-	Vector sup = getFarthest(dir);
-	Vector n_dir = mul(dir, -1);
-	Vector off = minus(sup, col->getFarthest(n_dir));
+	Vector n_dir = mul_vec(dir, -1);
+	Vector sup0 = get_farthest(col0, dir);
+	Vector sup1 = get_farthest(col1, n_dir);
+	Vector off = sub_vec(sup0, sup1);
 
 	return off;
 }
 
-Vector Collider::intersect(Collider* col) {
+//Vector simplex_switch() {
+//}
+
+Vector intersect(Collider* col0, Collider* col1) {
 		
-	Vector result = *(new Vector(0, 0, 0));
+	Vector result;
+	
+	init_vec(&result);
+	
 	int attempts = 100;
 	Vector simplex[VERT_COUNT];
-	Vector dir = minus(col->_pos, _pos);
-	Vector sup = support(&dir, col);
+	Vector dir = sub_vec((*col0)._pos, (*col1)._pos);
+	Vector sup = support(*col0, *col1, dir);
 	
 	simplex[0] = sup;
 
-	dir = mul(sup, -1);
+	dir = mul_vec(sup, -1);
 
 	for (int i = 0; i < attempts; i++) {
 		
-		sup = support(&dir, col);
-
-		float d = dot(&sup, &dir);
+		sup = support(*col0, *col1, dir);
+		float d = dot(sup, dir);
 
 		if (d <= 0) {
 			
@@ -102,6 +120,12 @@ Vector Collider::intersect(Collider* col) {
 
 		simplex[0] = sup;
 	}
+	
+	cout << simplex[0]._x << endl;
+	cout << "test" << endl;	
+	
+	Vector vec;
 
 	return vec;
 }
+
