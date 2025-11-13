@@ -132,6 +132,7 @@ class ObjectBuffer {
         ObjectChangeNode* tail = NULL;
         void Enqueue(ObjectChangeNode* node);
         ObjectChangeNode* Dequeue();
+        mutex queue_mtx;
 };
 
 #endif // OBJECT_BUFFER

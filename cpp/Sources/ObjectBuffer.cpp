@@ -102,6 +102,8 @@ void ObjectBuffer::SwapBuffers() {
 
 // Dequeue all changes and apply them to the objects
 void ObjectBuffer::ApplyChanges() {
+    unique_lock lock(queue_mtx);
+
     // Dequeue until empty
     while(head != NULL) {
         ObjectChangeNode* node = Dequeue();
@@ -147,6 +149,7 @@ void ObjectBuffer::ApplyChanges() {
 
 // Allocate then enqueue
 void ObjectBuffer::Enqueue(ObjectChangeNode* node) {
+    unique_lock lock(queue_mtx);
     if(head == NULL) {
         head = node;
         tail = node;
@@ -159,6 +162,7 @@ void ObjectBuffer::Enqueue(ObjectChangeNode* node) {
 
 
 // Delete after dequeue
+// Mutex locked in ApplyChanges()
 ObjectBuffer::ObjectChangeNode* ObjectBuffer::Dequeue() {
     ObjectChangeNode* node = head;
     if(head != NULL) {
