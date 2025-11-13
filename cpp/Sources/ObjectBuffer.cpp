@@ -55,6 +55,25 @@ bool ObjectBuffer::Full() {
 }
 
 
+void ObjectBuffer::SetPosition(int id, float x, float y, float z) {
+    // Enqueue change
+    ObjectChangeNode* node = new ObjectChangeNode(POSITION_SET, id, x, y, z);
+    Enqueue(node);
+}
+
+
+void ObjectBuffer::SetRotation(int id, float x, float y, float z, float w) {
+    ObjectChangeNode* node = new ObjectChangeNode(ROTATION_SET, id, x, y, z, w);
+    Enqueue(node);
+}
+
+
+void ObjectBuffer::AddPosition(int id, float dx, float dy, float dz) {
+    ObjectChangeNode* node = new ObjectChangeNode(POSITION_ADD, id, dx, dy, dz);
+    Enqueue(node);
+}
+
+
 // Saftely swaps the read and write buffer, writes read buffer to write buffer
 void ObjectBuffer::SwapBuffers() {
     // Write lock on the mutex
@@ -78,4 +97,72 @@ void ObjectBuffer::SwapBuffers() {
 
         *write_obj = *read_obj;
     }
+}
+
+
+// Dequeue all changes and apply them to the objects
+void ObjectBuffer::ApplyChanges() {
+    // Dequeue until empty
+    while(head != NULL) {
+        ObjectChangeNode* node = Dequeue();
+
+        // Check Id validity
+        if(node->id < 0 || node->id >= OBJECT_BUFFER_SIZE || write_buffer_ptr[node->id] == NULL) {
+            cout << "ERROR: invalid GameObject Id" << endl;
+            delete node;
+            continue;
+        }
+
+        GameObject* obj = write_buffer_ptr[node->id];
+
+        switch(node->change_type) {
+            case POSITION_SET:
+                obj->collider._pos._x = node->val1;
+                obj->collider._pos._y = node->val2;
+                obj->collider._pos._z = node->val3;
+                break;
+            case ROTATION_SET:
+                obj->collider._rot._x += node->val1;
+                obj->collider._rot._y += node->val2;
+                obj->collider._rot._z += node->val3;
+                obj->collider._rot._w += node->val4;
+                break;
+            case POSITION_ADD:
+                obj->collider._pos._x += node->val1;
+                obj->collider._pos._y += node->val2;
+                obj->collider._pos._z += node->val3;
+                break;
+            case ROTATION_ADD:
+
+                break;
+            default:
+                cout << "ERROR: Invalid change type" << endl;
+                break;
+        }
+
+        delete node;
+    }
+}
+
+
+// Allocate then enqueue
+void ObjectBuffer::Enqueue(ObjectChangeNode* node) {
+    if(head == NULL) {
+        head = node;
+        tail = node;
+    }
+    else {
+        tail->next = node;
+        tail = node;
+    }
+}
+
+
+// Delete after dequeue
+ObjectBuffer::ObjectChangeNode* ObjectBuffer::Dequeue() {
+    ObjectChangeNode* node = head;
+    if(head != NULL) {
+        head = head->next;
+    }
+    return node;
 }

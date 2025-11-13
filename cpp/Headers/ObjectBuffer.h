@@ -2,6 +2,7 @@
 #define OBJECT_BUFFER
 
 #include "../Headers/GameObject.h"
+#include <iostream>
 #include <iterator>
 #include <cstddef>
 #include <mutex>
@@ -10,6 +11,11 @@
 #define OBJECT_BUFFER_SIZE 100
 #define READ 0
 #define WRITE 1
+// Object Change Types
+#define POSITION_SET 0
+#define POSITION_ADD 1
+#define ROTATION_SET 2
+#define ROTATION_ADD 3
 
 using namespace std;
 
@@ -91,8 +97,12 @@ class ObjectBuffer {
         // Functions
         int CreateObject();
         bool DeleteObject(int id);
+        void SetPosition(int id, float x, float y, float z);
+        void SetRotation(int id, float x, float y, float z, float w);
+        void AddPosition(int id, float dx, float dy, float dz);
         bool Full();
         void SwapBuffers();
+        void ApplyChanges();
 
         shared_mutex mtx;
 
@@ -104,6 +114,24 @@ class ObjectBuffer {
 
     private:
         int buffer_index = 0;
+
+        // Change Queue
+        // Only apply changes to GameObjects outside of physics calculations
+        struct ObjectChangeNode {
+            public:
+                ObjectChangeNode(int _ct, int _id, int _v1, int _v2 = 0, int _v3 = 0, int _v4 = 0) : change_type(_ct), id(_id), val1(_v1), val2(_v2), val3(_v3), val4(_v4) {}
+                int change_type;
+                int id;
+                float val1;
+                float val2;
+                float val3;
+                float val4;
+                ObjectChangeNode* next = NULL;
+        };
+        ObjectChangeNode* head = NULL;
+        ObjectChangeNode* tail = NULL;
+        void Enqueue(ObjectChangeNode* node);
+        ObjectChangeNode* Dequeue();
 };
 
 #endif // OBJECT_BUFFER

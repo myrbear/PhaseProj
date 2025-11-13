@@ -53,6 +53,10 @@ void PhaseEngine::RunPhysicsThread() {
     
         auto loop_start = chrono::steady_clock::now();
 
+        // Apply external changes
+        object_buffer.ApplyChanges();
+
+        // Apply changes to read buffer
         object_buffer.SwapBuffers();
 
         // Run physics calculations
@@ -110,6 +114,23 @@ bool PhaseEngine::DeleteObject(int id) {
     }
     return result;
 }
+
+
+void PhaseEngine::SetPosition(int id, float x, float y) {
+    object_buffer.SetPosition(id, x, y, 0);
+}
+
+
+void PhaseEngine::SetRotation(int id, float x, float y, float z, float w) {
+    object_buffer.SetRotation(id, x, y, z, w);
+}
+
+
+void PhaseEngine::AddPosition(int id, float dx, float dy) {
+    object_buffer.AddPosition(id, dx, dy, 0);
+}
+
+
 
 
 ObjectBuffer::ObjectIterator PhaseEngine::BeginObjIt() {

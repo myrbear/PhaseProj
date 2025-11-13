@@ -32,6 +32,11 @@ class PhaseEngine {
         ObjectBuffer::ObjectIterator BeginObjIt();
         ObjectBuffer::ObjectIterator EndObjIt();
 
+        // Object modification functions
+        void SetPosition(int id, float x, float y);
+        void SetRotation(int id, float x, float y, float z, float w);
+        void AddPosition(int id, float dx, float dy);
+
         bool IsRunning();
 
     private:
