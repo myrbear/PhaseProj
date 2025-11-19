@@ -15,6 +15,8 @@
 
 using namespace std;
 
+int simplex_idx = 0;
+
 void init_col(Collider* col) {
 	
 	init_vec( &( (*col)._pos      ),  0,  0,  0);
@@ -90,8 +92,34 @@ Vector support(Collider col0, Collider col1, Vector dir) {
 	return off;
 }
 
-//Vector simplex_switch() {
-//}
+int line_case(Vector* simplex, Vector* dir) {
+	return 1;
+}
+
+int tri_case(Vector* simplex, Vector* dir) {
+	return 1;
+}
+
+int tetra_case(Vector* simplex, Vector* dir) {
+	return 1;
+}
+
+int simplex_switch(Vector* simplex, Vector* dir) {
+	
+	switch (simplex_idx) {
+		
+		case 2:	
+			line_case(simplex, dir);
+		case 3:
+			tri_case(simplex, dir);
+		case 4:
+			return tetra_case(simplex, dir);
+		default:
+			break;
+	}
+	
+	return 0;
+}
 
 Vector intersect(Collider* col0, Collider* col1) {
 		
@@ -104,7 +132,8 @@ Vector intersect(Collider* col0, Collider* col1) {
 	Vector dir = sub_vec((*col0)._pos, (*col1)._pos);
 	Vector sup = support(*col0, *col1, dir);
 	
-	simplex[0] = sup;
+	simplex[simplex_idx] = sup;
+	simplex_idx++;
 
 	dir = mul_vec(sup, -1);
 
@@ -118,7 +147,13 @@ Vector intersect(Collider* col0, Collider* col1) {
 			return result;
 		}
 
-		simplex[0] = sup;
+		simplex[simplex_idx] = sup;
+		simplex_idx++;
+
+		if (simplex_switch(&simplex[0], &dir)) {
+			
+			
+		}
 	}
 	
 	cout << simplex[0]._x << endl;
