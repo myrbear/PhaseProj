@@ -12,10 +12,12 @@ int main(void) {
 	init_col(&col0);
 	init_col(&col1);
 
-	intersect(&col0, &col1);
+	col0._pos._x = 3;
+	
+	Vector v = intersect(&col0, &col1);
 
-	cout << col0._verts[0]._x << endl;
-
+	cout << v._x << " " << v._y << " " << v._z << endl;
 	cout << "hi" << endl;
+
 	return 0;
 }

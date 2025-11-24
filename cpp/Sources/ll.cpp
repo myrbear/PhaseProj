@@ -6,61 +6,90 @@
 
 */
 
-#include<iostream>
-
-using namespace std;
-
-struct Node {
-
-	int dat;
-	Node* next;
-};
-
-Node* insert_head(Node* root, int dat) {
-
-	Node* insert = new Node();
-	insert->dat = dat;
-	insert->next = nullptr;
+Node* insert(Node* root, Vector dat, int loc) {
 	
-	Node* temp = root;
+	if (root == nullptr) {
 
-	while (temp->next != nullptr) {
+		root = new Node();
+		root->next = nullptr;
+		root->dat = dat;
+
+		return root;
+	}	
+	
+	if (loc == 0) {
+
+		// insert head
+
+		Node* in = new Node();
+        	in->dat = dat;
+        	in->next = root;
+
+        	return in;
+	}
+	else if (loc < 0) {
 		
-		temp = temp->next;
-	}
-	
-	insert->next = temp;
+		// do nothing
 
-	return insert;
-}
-
-void insert(Node* root, int dat, int loc) {
-	
-	// pls don't pass in less than 1
-
-	if (loc < 1) {
-
-		return;
+		return root;
 	}
 
-	Node* insert = new Node();
-	insert->dat = dat;
-	insert->next = nullptr;
+	// insert body or tail
+	// idx starts at 1 because the iterating node "prev" is the node previous to the
+	// node we want to insert
+	// prev will start at root
+	// if desired loc is beyond size, insert gets appended to tail
 
-	Node* temp = root;
 	int idx = 1;
+	Node* in = new Node();
+	Node* prev = root;
+	in->dat = dat;
 
-	while (temp->next != nullptr && idx < loc) {
+	while (prev->next != nullptr && idx < loc) {
 		
-		temp = temp->next;
+		prev = prev->next;
 		idx++;
 	}	
+	
+	in->next = prev->next;
+	prev->next = in;
 
-	temp->next = insert;
+	return root;
 }
 
-void remove(Node* node, int loc) {
+Node* remove(Node* root, int loc) {
 	
+	if (root == nullptr) {
+		
+		return nullptr;
+	}
 	
+	if (loc == 0) {
+		
+		Node* newRoot = root->next;
+
+		delete root;
+		return newRoot;
+	}
+
+	Node* prev = root;
+	Node* cur = root->next;
+	int idx = 1;
+	
+	while (cur != nullptr && idx < loc) {
+		prev = cur;
+		cur = cur->next;
+		idx++;
+	}
+
+	if (cur == nullptr) {
+	
+		return root;
+	}
+
+	prev->next = cur->next;
+
+	delete cur;
+	return root;
 }
 
