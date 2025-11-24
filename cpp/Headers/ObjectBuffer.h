@@ -12,10 +12,15 @@
 #define READ 0
 #define WRITE 1
 // Object Change Types
-#define POSITION_SET 0
-#define POSITION_ADD 1
-#define ROTATION_SET 2
-#define ROTATION_ADD 3
+#define OBJECT_CREATE 0
+#define OBJECT_DELETE 1
+#define POSITION_SET 2
+#define ROTATION_SET 3
+#define VELOCITY_SET 4
+#define POSITION_ADD 5
+#define ROTATION_ADD 6
+#define VELOCITY_ADD 7
+
 
 using namespace std;
 
@@ -89,17 +94,21 @@ class ObjectBuffer {
                 shared_mutex* mtx;
         };
 
-        ObjectIterator read_begin() { return ObjectIterator(this, 0, READ, &mtx); }
+        ObjectIterator read_begin() { ObjectIterator it(this, 0, READ, &mtx); if(*it == NULL) it++; return it; }
         ObjectIterator read_end() { return ObjectIterator(this, OBJECT_BUFFER_SIZE, READ, &mtx); }
-        ObjectIterator write_begin() { return ObjectIterator(this, 0, WRITE, &mtx); }
+        ObjectIterator write_begin() { ObjectIterator it(this, 0, WRITE, &mtx); if(*it == NULL) it++; return it; }
         ObjectIterator write_end() { return ObjectIterator(this, OBJECT_BUFFER_SIZE, WRITE, &mtx); }
 
         // Functions
         int CreateObject();
-        bool DeleteObject(int id);
+        void DeleteObject(int id);
+        GameObject GetGameObject(int id);
         void SetPosition(int id, float x, float y, float z);
         void SetRotation(int id, float x, float y, float z, float w);
+        void SetVelocity(int id, float vx, float vy);
         void AddPosition(int id, float dx, float dy, float dz);
+        void AddRotation(int id, float dx, float dy, float dz, float dw);
+        void AddVelocity(int id, float dvx, float dvy);
         bool Full();
         void SwapBuffers();
         void ApplyChanges();
@@ -119,7 +128,7 @@ class ObjectBuffer {
         // Only apply changes to GameObjects outside of physics calculations
         struct ObjectChangeNode {
             public:
-                ObjectChangeNode(int _ct, int _id, int _v1, int _v2 = 0, int _v3 = 0, int _v4 = 0) : change_type(_ct), id(_id), val1(_v1), val2(_v2), val3(_v3), val4(_v4) {}
+                ObjectChangeNode(int _ct, int _id, int _v1=0, int _v2 = 0, int _v3 = 0, int _v4 = 0) : change_type(_ct), id(_id), val1(_v1), val2(_v2), val3(_v3), val4(_v4) {}
                 int change_type;
                 int id;
                 float val1;

@@ -52,13 +52,10 @@ void PhaseEngine::RunPhysicsThread() {
     while(engine_running.load()) {
     
         auto loop_start = chrono::steady_clock::now();
-
-        // Apply external changes
-        object_buffer.ApplyChanges();
-
+        
         // Apply changes to read buffer
         object_buffer.SwapBuffers();
-
+        
         // Run physics calculations
         SimulatePhysics(frame_time.count());
         
@@ -67,10 +64,12 @@ void PhaseEngine::RunPhysicsThread() {
         for(auto it = BeginPhysIt(); it != EndPhysIt(); it++) {
             GameObject* obj = *it;
             
-            obj->collider._pos._x += 1;
             obj->collider._pos._y += 1;
         }
-
+        
+        // Apply external changes
+        object_buffer.ApplyChanges();
+        
         // Hybrid sleep
         // Sleep for 500us until within 1ms of next frame
         auto next_frame = loop_start + frame_time;
@@ -107,30 +106,32 @@ int PhaseEngine::CreateObject() {
 }
 
 
-bool PhaseEngine::DeleteObject(int id) {
-    bool result = object_buffer.DeleteObject(id);
-    if(!result) {
-        cout << "ERROR: No object with id " << id << " found" << endl;
-    }
-    return result;
+GameObject PhaseEngine::GetGameObject(int id) {
+    return object_buffer.GetGameObject(id);
 }
 
 
+void PhaseEngine::DeleteObject(int id) {
+    object_buffer.DeleteObject(id);
+}
 void PhaseEngine::SetPosition(int id, float x, float y) {
     object_buffer.SetPosition(id, x, y, 0);
 }
-
-
 void PhaseEngine::SetRotation(int id, float x, float y, float z, float w) {
     object_buffer.SetRotation(id, x, y, z, w);
 }
-
-
+void PhaseEngine::SetVelocity(int id, float vx, float vy) {
+    object_buffer.SetVelocity(id, vx, vy);
+}
 void PhaseEngine::AddPosition(int id, float dx, float dy) {
     object_buffer.AddPosition(id, dx, dy, 0);
 }
-
-
+void PhaseEngine::AddRotation(int id, float dx, float dy, float dz, float dw){
+    object_buffer.AddRotation(id, dx, dy, dz, dw);
+}
+void PhaseEngine::AddVelocity(int id, float dvx, float dvy){
+    object_buffer.AddVelocity(id, dvx, dvy);
+}
 
 
 ObjectBuffer::ObjectIterator PhaseEngine::BeginObjIt() {

@@ -27,15 +27,20 @@ class PhaseEngine {
         void Run();
         void Stop();
         int CreateObject();
-        bool DeleteObject(int id);
+        void DeleteObject(int id);
+        // Object read functions
         // For external use (ALEX)
         ObjectBuffer::ObjectIterator BeginObjIt();
         ObjectBuffer::ObjectIterator EndObjIt();
+        GameObject GetGameObject(int id);
 
-        // Object modification functions
+        // Object write functions
         void SetPosition(int id, float x, float y);
         void SetRotation(int id, float x, float y, float z, float w);
+        void SetVelocity(int id, float vx, float vy);
         void AddPosition(int id, float dx, float dy);
+        void AddRotation(int id, float dx, float dy, float dz, float dw);
+        void AddVelocity(int id, float dvx, float dvy);
 
         bool IsRunning();
 
