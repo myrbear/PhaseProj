@@ -12,7 +12,7 @@ int main(void) {
 	init_col(&col0);
 	init_col(&col1);	
 
-	col1._pos._x = 0.5f;
+	col1._pos._x = 3;
 	col1._pos._y = 0.5f;
 	col1._pos._z = 0.5f;
 

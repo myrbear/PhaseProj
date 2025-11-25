@@ -20,7 +20,10 @@ using namespace std;
 int simplex_idx = 0;
 
 void init_col(Collider* col) {
-	
+
+	// initialize a collider
+	// colliders have position, rotation, scale
+	//  	
 	init_vec( &( col->_pos      ),  0,  0,  0);
 	init_vec( &( col->_verts[0] ), -1, -1, -1);
 	init_vec( &( col->_verts[1] ), -1, -1,  1);
@@ -79,7 +82,7 @@ Vector get_farthest(Collider col, Vector dir) {
 	int targ_idx = 0;
 	float max_dot = FLT_MIN;
 
-	for (int i = 0; i < VERT_COUNT; i++) {
+	for (int i = 0; i < 8; i++) {
 	
 		Vector abt_origin = sub_vec(col._verts[i], col._pos);	
 		float d = dot(abt_origin, dir);
@@ -91,14 +94,24 @@ Vector get_farthest(Collider col, Vector dir) {
 		}
 	}
 
-	return col._verts[targ_idx];
+	return add_vec(col._pos, col._verts[targ_idx]);
 }
 
 Vector support(Collider col0, Collider col1, Vector dir) {
 	
 	Vector n_dir = mul_vec(dir, -1);
 	Vector sup0 = get_farthest(col0, dir);
+	
+	cout << "farthest A: ";
+	p_vec(sup0);
+	cout << endl;
+	
 	Vector sup1 = get_farthest(col1, n_dir);
+	
+	cout << "farthest B: ";
+	p_vec(sup1);
+	cout << endl;	
+
 	Vector off = sub_vec(sup0, sup1);
 
 	return off;
@@ -302,6 +315,8 @@ Vector intersect(Collider* col0, Collider* col1) {
 		cout << "dir: ";
 		p_vec(dir);
 		cout << endl;
+
+		cout << "dot: " << d << endl;
 
 		if (d <= 0) {
 			cout << "d <= 0" << endl;	

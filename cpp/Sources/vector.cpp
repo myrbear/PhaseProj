@@ -49,9 +49,9 @@ Vector sub_vec(Vector a, Vector b) {
 
 	Vector result;
 
-	result._x = a._x + b._x;
-	result._y = a._y + b._y;
-	result._z = a._z + b._z;
+	result._x = a._x - b._x;
+	result._y = a._y - b._y;
+	result._z = a._z - b._z;
 
 	return result;
 }
