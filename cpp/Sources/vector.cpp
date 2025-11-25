@@ -15,6 +15,11 @@
 
 using namespace std;
 
+void p_vec(Vector v) {
+	
+	cout << "< " << v._x << " , " << v._y << " , " << v._z << " >"; 
+}
+
 void init_vec(Vector* v) {
 	
 	(*v)._x = 0;

@@ -15,6 +15,7 @@ struct Collider {
         Vector _scale;
 };
 
+void p_col(Collider col);
 void init_col(Collider* col);
 Vector** gen_faces(Vector* v_arr, Vector dir);
 Vector get_farthest(Collider col0, Vector dir);

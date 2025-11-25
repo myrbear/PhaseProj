@@ -32,6 +32,16 @@ void init_col(Collider* col) {
 	init_vec( &( col->_verts[7] ),  1,  1,  1);
 }
 
+void p_col(Collider col) {
+	
+	for (int i = 0; i < 8; i++) {
+	
+		p_vec(add_vec(col._pos, col._verts[i]));
+	}
+	
+	cout << endl;
+}
+
 Vector** gen_faces(Vector* polytope, int len) {
 	
 	// take a list of verts, return lists of lists of 3 verts (faces)
@@ -234,9 +244,19 @@ int simplex_switch(Vector* simplex, Vector* dir) {
 		
 		case 2:	
 			line_case(simplex, dir);
+			cout << "line case passed" << endl;
+			cout << "simplex: ";
+			p_vec(simplex[0]);
+			cout << " , ";
+			p_vec(simplex[1]);
+			cout << endl;
 		case 3:
 			tri_case(simplex, dir);
+			cout << "tri case passed" << endl;
+			cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x  << ", " << simplex[2]._x << endl;
 		case 4:
+			cout << "tetra case passed" << endl;
+			cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x << ", " << simplex[2]._x << ", " << simplex[3]._x << endl;
 			return tetra_case(simplex, dir);
 		default:
 			break;
@@ -255,6 +275,15 @@ Vector intersect(Collider* col0, Collider* col1) {
 	Vector simplex[VERT_COUNT];
 	Vector dir = sub_vec(col0->_pos, col1->_pos);
 	Vector sup = support(*col0, *col1, dir);
+
+	
+                cout << "dir: ";
+                p_vec(dir);
+                cout << endl;
+	
+	cout << "sup: ";	
+	p_vec(sup);  
+	cout << endl;
 	
 	init_vec(&simplex[0]);
 	simplex_idx = 1;
@@ -266,8 +295,16 @@ Vector intersect(Collider* col0, Collider* col1) {
 		sup = support(*col0, *col1, dir);
 		float d = dot(sup, dir);
 
+		cout << "sup: ";
+		p_vec(sup);
+		cout << endl;
+
+		cout << "dir: ";
+		p_vec(dir);
+		cout << endl;
+
 		if (d <= 0) {
-			
+			cout << "d <= 0" << endl;	
 			return result;
 		}
 		

@@ -10,14 +10,19 @@ int main(void) {
 	Collider col1;
 
 	init_col(&col0);
-	init_col(&col1);
+	init_col(&col1);	
 
-	col0._pos._x = 3;
+	col1._pos._x = 0.5f;
+	col1._pos._y = 0.5f;
+	col1._pos._z = 0.5f;
+
+	p_col(col0);
+	p_col(col1);	
 	
 	Vector v = intersect(&col0, &col1);
 
 	cout << v._x << " " << v._y << " " << v._z << endl;
-	cout << "hi" << endl;
+	cout << "hi ..." << endl;
 
 	return 0;
 }

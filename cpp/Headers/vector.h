@@ -9,6 +9,7 @@ struct Vector {
 	float _z;
 };
 
+void p_vec(Vector v);
 void init_vec(Vector* v);
 void init_vec(Vector* v, float x, float y, float z);
 float dot(Vector a, Vector b);
