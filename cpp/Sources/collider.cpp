@@ -60,6 +60,8 @@ void p_col(Collider col) {
 		Vector sum = add_vec(col._pos, v);
 
 		p_vec(sum);
+
+		temp = temp->next;
 	}
 	
 	cout << endl;
@@ -128,6 +130,7 @@ Vector get_farthest(Collider col, Vector dir) {
 		}
 
 		i++;
+		temp = temp->next;
 	}
 
 	Vector targ_vec = traverse(col._verts, targ_idx);
@@ -296,8 +299,8 @@ int tetra_case(Node* simplex, Vector* dir) {
                 
 		clear(simplex);
                 insert(simplex, c, 0);
-                insert(simplex, a, 1);
-                insert(simplex, d, 2);		
+                insert(simplex, d, 1);
+                insert(simplex, a, 2);		
 		*dir = cad;
 		
 		return 0;
@@ -306,8 +309,8 @@ int tetra_case(Node* simplex, Vector* dir) {
 		
 		clear(simplex);
                 insert(simplex, d, 0);
-                insert(simplex, a, 1);
-                insert(simplex, b, 2);
+                insert(simplex, b, 1);
+                insert(simplex, a, 2);
 		*dir = dab;
 		
 		return 0;
@@ -320,24 +323,24 @@ int tetra_case(Node* simplex, Vector* dir) {
 
 int simplex_switch(Node* simplex, Vector* dir) {
 	
+	Node* temp = simplex;
+	
+	while (temp) {
+		
+		p_vec(temp->dat);
+		temp = temp->next;
+	}
+
 	switch (simplex_idx) {
 		
-		case 2:	
+		case 2:
+			cout << "line case running" << endl;	
 			line_case(simplex, dir);
-			cout << "line case passed" << endl;
-			cout << "simplex: ";
-			//p_vec(simplex[0]);
-			cout << " , ";
-			//p_vec(simplex[1]);
-			cout << endl;
 		case 3:
-			cout << "tri case passed" << endl;
-			//cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x  << ", " << simplex[2]._x << endl;
-			
+			cout << "tri case running" << endl;
 			return tri_case(simplex, dir);
 		case 4:
-			cout << "tetra case passed" << endl;
-			//cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x << ", " << simplex[2]._x << ", " << simplex[3]._x << endl;
+			cout << "tetra case running" << endl;
 			return tetra_case(simplex, dir);
 		default:
 			break;
