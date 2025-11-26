@@ -22,30 +22,50 @@ int simplex_idx = 0;
 void init_col(Collider* col) {
 
 	// initialize a collider
-	// colliders have position, rotation, scale
-	//  	
-	init_vec( &( col->_pos      ),  0,  0,  0);
-	init_vec( &( col->_verts[0] ), -1, -1, -1);
-	init_vec( &( col->_verts[1] ), -1, -1,  1);
-	init_vec( &( col->_verts[2] ), -1,  1, -1);
-	init_vec( &( col->_verts[3] ), -1,  1,  1);
-	init_vec( &( col->_verts[4] ),  1, -1, -1);
-	init_vec( &( col->_verts[5] ),  1, -1,  1);
-	init_vec( &( col->_verts[6] ),  1,  1, -1);
-	init_vec( &( col->_verts[7] ),  1,  1,  1);
+	// colliders have position, rotation, scale, and vertices
+	// currently, position and vertices are the only relevant properties
+
+	// init a collider at pos <0,0,0>
+	// give it 4 vertices because we're in 2D space.
+	// the result is a square centered at the origin where each side is 2 units
+	
+	init_vec(&col->_pos,  0,  0,  0);
+	
+	Vector dat0;
+	Vector dat1;
+	Vector dat2;
+	Vector dat3;
+	
+	init_vec(&dat0, -1, -1,  0);
+	init_vec(&dat1, -1,  1,  0);
+	init_vec(&dat2,  1, -1,  0);
+	init_vec(&dat3,  1,  1,  0);
+
+	col->_verts = insert(col->_verts, dat0, 0);
+	col->_verts = insert(col->_verts, dat1, 1);
+	col->_verts = insert(col->_verts, dat2, 2);
+	col->_verts = insert(col->_verts, dat3, 3);	
 }
 
 void p_col(Collider col) {
 	
-	for (int i = 0; i < 8; i++) {
-	
-		p_vec(add_vec(col._pos, col._verts[i]));
+	// print the vertices of a collider in world space
+	// (adds position)
+
+	Node* temp = col._verts;
+
+	while (temp) {
+		
+		Vector v = temp->dat;
+		Vector sum = add_vec(col._pos, v);
+
+		p_vec(sum);
 	}
 	
 	cout << endl;
 }
 
-Vector** gen_faces(Vector* polytope, int len) {
+Vector** gen_faces(Node* polytope, int len) {
 	
 	// take a list of verts, return lists of lists of 3 verts (faces)
 	
@@ -56,9 +76,9 @@ Vector** gen_faces(Vector* polytope, int len) {
 		for (int i = 0; i < len - 2; i += 3) {
 			
 			tris[i / 3] = new Vector[3];
-			tris[i / 3][0] = polytope[i];
-			tris[i / 3][1] = polytope[i + 1];
-			tris[i / 3][2] = polytope[i + 2];
+			tris[i / 3][0] = traverse(polytope, i);
+			tris[i / 3][1] = traverse(polytope, i + 1);
+			tris[i / 3][2] = traverse(polytope, i + 2);
 		}
 	}
 
@@ -66,6 +86,9 @@ Vector** gen_faces(Vector* polytope, int len) {
 }
 
 void delete_faces(Vector** polytope, int len) {
+
+	// faces are constructed with the new operator
+	// delete each array in faces to protect memory
 
 	for (int i = 0; i < len; i++) {
 		
@@ -77,14 +100,25 @@ void delete_faces(Vector** polytope, int len) {
 
 Vector get_farthest(Collider col, Vector dir) {
 
+	// given a direction
+	// given the position of a collider
+	// given the vertices of a collider
+
+	// assume direction starts from the origin
+	// find the vector that is farthest in given direction (use dot product)
+	// then return that vector in world space by adding position
+
 	dir = norm(dir);
 	
 	int targ_idx = 0;
+	int i = 0;
 	float max_dot = FLT_MIN;
 
-	for (int i = 0; i < 8; i++) {
-	
-		Vector abt_origin = sub_vec(col._verts[i], col._pos);	
+	Node* temp = col._verts;
+
+	while (temp) {
+
+		Vector abt_origin = sub_vec(temp->dat, col._pos);	
 		float d = dot(abt_origin, dir);
 		
 		if (d > max_dot) {
@@ -92,13 +126,25 @@ Vector get_farthest(Collider col, Vector dir) {
 			max_dot = d;
 			targ_idx = i;
 		}
+
+		i++;
 	}
 
-	return add_vec(col._pos, col._verts[targ_idx]);
+	Vector targ_vec = traverse(col._verts, targ_idx);
+	Vector sum = add_vec(col._pos, targ_vec);
+
+	return sum;
 }
 
 Vector support(Collider col0, Collider col1, Vector dir) {
-	
+
+	// given a search direction and two colliders
+	// find the farthest point on one collider in the given direction
+	// find the farthest point on the other collider in the opposite direction
+	// get both farthest points in world space
+	// return the offset between those points
+	// this offset will be treated as a point (same offset, but starts at origin) and will be added to the simplex
+
 	Vector n_dir = mul_vec(dir, -1);
 	Vector sup0 = get_farthest(col0, dir);
 	
@@ -117,10 +163,19 @@ Vector support(Collider col0, Collider col1, Vector dir) {
 	return off;
 }
 
-void line_case(Vector* simplex, Vector* dir) {
+void line_case(Node* simplex, Vector* dir) {
 
-	Vector a = simplex[0];
-	Vector b = simplex[1];
+	// there are two points on the simplex
+	// create an offset between them (edge ab)
+	// create an offset between the first point and the origin (ao)
+	// cross ao and ab to get aoXab then cross ab with aoXab again
+	// the first cross will face up or down relative to the plane of ao and ab
+	// then by crossing ab with aoXab again, we'll get a vector perpendicular to ab
+	// that perpendicular vector will either be facing the origin or facing away from the origin
+	// conceptually, the perpendicular vector starts at point a
+	
+	Vector a = traverse(simplex, 0);
+	Vector b = traverse(simplex, 1);
 	Vector ao = mul_vec(a, -1);
 	Vector ab = sub_vec(b, a);
 
@@ -128,14 +183,18 @@ void line_case(Vector* simplex, Vector* dir) {
 	Vector abP = cross(ab, aoXab);
 	
 	(*dir) = abP;
-	simplex_idx = 2;
 }
 
-void tri_case(Vector* simplex, Vector* dir) {
+int tri_case(Node* simplex, Vector* dir) {
 	
-	Vector a = simplex[0];
-	Vector b = simplex[1];
-	Vector c = simplex[2];
+	// same concept as the line case
+	// now we have 3 points
+	// since ab from the line case was already tested, we can skip that edge
+	// so we need ab perp, ac perp, current cb is the same edge as last step's ab
+	
+	Vector a = traverse(simplex, 0);
+	Vector b = traverse(simplex, 1);
+	Vector c = traverse(simplex, 2);
 	Vector ao = mul_vec(a, -1);
 	Vector ab = sub_vec(b, a);
 	Vector ac = sub_vec(c, a);
@@ -147,17 +206,17 @@ void tri_case(Vector* simplex, Vector* dir) {
 
 	if (dt > EPSILON) {
 		
-		simplex[0] = a;
-		simplex[1] = b;
-		*dir = abP;
-		simplex_idx = 2;
+		clear(simplex);
+		insert(simplex, a, 0);
+		insert(simplex, b, 1);
+		(*dir) = abP;
 	}
 	else if (dt1 > EPSILON) {
 		
-		simplex[0] = a;
-		simplex[1] = c;
-		*dir = acP;
-		simplex_idx = 2;
+		clear(simplex);
+		insert(simplex, a, 0);
+		insert(simplex, c, 1);
+		(*dir) = acP;
 	}
 	else {
 		
@@ -169,29 +228,34 @@ void tri_case(Vector* simplex, Vector* dir) {
 			// normal faces origin, swap verts to face away
 			// make search direction the unswapped normal
 			
-			simplex[0] = a;
-			simplex[1] = c;
-			simplex[2] = b;
-			*dir = abc;
-			simplex_idx = 3;
+			clear(simplex);
+			insert(simplex, a, 0);
+			insert(simplex, c, 1);
+			insert(simplex, b, 2);
+			(*dir) = abc;
+			
+			return 1;
 		}
 		else {
 			
 			// normal remains pointing away from origin
 			// search direction toward origin
 
-			*dir = mul_vec(abc, -1);
-			simplex_idx = 3;
+			(*dir) = mul_vec(abc, -1);
+			
+			return 1;
 		}
 	}
+
+	return 0;
 }
 
-int tetra_case(Vector* simplex, Vector* dir) {
+int tetra_case(Node* simplex, Vector* dir) {
 	
-	Vector a = simplex[0];
-	Vector b = simplex[1];
-	Vector c = simplex[2];
-	Vector d = simplex[3];
+	Vector a = traverse(simplex, 0);
+	Vector b = traverse(simplex, 1);
+	Vector c = traverse(simplex, 2);
+	Vector d = traverse(simplex, 3);
 	
 	Vector ba = sub_vec(a, b);
 	Vector ca = sub_vec(a, c);
@@ -219,30 +283,33 @@ int tetra_case(Vector* simplex, Vector* dir) {
 	// bc x bd will face away from the origin
 
 	if (bacDot > EPSILON) {
-		
-		simplex[0] = b;
-		simplex[1] = c;
-		simplex[2] = a;
+	
+		clear(simplex);
+		insert(simplex, b, 0);
+		insert(simplex, c, 1);
+		insert(simplex, a, 2);
 		*dir = bac;
-		simplex_idx = 3;
+	
 		return 0;
 	}
 	else if (cadDot > EPSILON) {
-		
-		simplex[0] = c;
-		simplex[1] = d;
-		simplex[2] = a;
+                
+		clear(simplex);
+                insert(simplex, c, 0);
+                insert(simplex, a, 1);
+                insert(simplex, d, 2);		
 		*dir = cad;
-		simplex_idx = 3;
+		
 		return 0;
 	}
 	else if (dabDot > EPSILON) {
 		
-		simplex[0] = d;
-		simplex[1] = b;
-		simplex[2] = a;
+		clear(simplex);
+                insert(simplex, d, 0);
+                insert(simplex, a, 1);
+                insert(simplex, b, 2);
 		*dir = dab;
-		simplex_idx = 3;
+		
 		return 0;
 	}
 
@@ -251,7 +318,7 @@ int tetra_case(Vector* simplex, Vector* dir) {
 	return 1;
 }
 
-int simplex_switch(Vector* simplex, Vector* dir) {
+int simplex_switch(Node* simplex, Vector* dir) {
 	
 	switch (simplex_idx) {
 		
@@ -259,17 +326,18 @@ int simplex_switch(Vector* simplex, Vector* dir) {
 			line_case(simplex, dir);
 			cout << "line case passed" << endl;
 			cout << "simplex: ";
-			p_vec(simplex[0]);
+			//p_vec(simplex[0]);
 			cout << " , ";
-			p_vec(simplex[1]);
+			//p_vec(simplex[1]);
 			cout << endl;
 		case 3:
-			tri_case(simplex, dir);
 			cout << "tri case passed" << endl;
-			cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x  << ", " << simplex[2]._x << endl;
+			//cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x  << ", " << simplex[2]._x << endl;
+			
+			return tri_case(simplex, dir);
 		case 4:
 			cout << "tetra case passed" << endl;
-			cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x << ", " << simplex[2]._x << ", " << simplex[3]._x << endl;
+			//cout << "simplex: " << simplex[0]._x << ", " << simplex[1]._x << ", " << simplex[2]._x << ", " << simplex[3]._x << endl;
 			return tetra_case(simplex, dir);
 		default:
 			break;
@@ -285,7 +353,7 @@ Vector intersect(Collider* col0, Collider* col1) {
 	init_vec(&result);
 	
 	int attempts = 100;
-	Vector simplex[VERT_COUNT];
+	Node* simplex;
 	Vector dir = sub_vec(col0->_pos, col1->_pos);
 	Vector sup = support(*col0, *col1, dir);
 
@@ -298,9 +366,6 @@ Vector intersect(Collider* col0, Collider* col1) {
 	p_vec(sup);  
 	cout << endl;
 	
-	init_vec(&simplex[0]);
-	simplex_idx = 1;
-
 	dir = mul_vec(sup, -1);
 
 	for (int i = 0; i < attempts; i++) {
@@ -322,11 +387,10 @@ Vector intersect(Collider* col0, Collider* col1) {
 			cout << "d <= 0" << endl;	
 			return result;
 		}
-		
-		simplex[simplex_idx] = sup;
-		simplex_idx++;
 
-		if (simplex_switch(&simplex[0], &dir)) {
+		insert(simplex, sup, 0);
+
+		if (simplex_switch(simplex, &dir)) {
 						
 			Vector ret;
 			init_vec(&ret);
@@ -335,7 +399,7 @@ Vector intersect(Collider* col0, Collider* col1) {
 		}
 	}
 	
-	cout << simplex[0]._x << endl;
+	cout << traverse(simplex, 0)._x << endl;
 	cout << "test" << endl;	
 	
 	Vector vec;

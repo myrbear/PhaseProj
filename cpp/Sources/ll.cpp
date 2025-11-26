@@ -6,88 +6,160 @@
 
 */
 
+#include "../Headers/ll.h"
+
+Node* clear(Node* root) {
+	
+	Node* temp = root;
+
+	while (temp) {
+		
+		Node* next = temp->next;
+
+		delete temp;
+
+		temp = next;
+	}
+	
+	root = nullptr;
+
+	return root;
+}
+
+Vector traverse(Node* root, int loc) {
+	
+	int idx = 0;
+	Node* temp = root;
+
+	while (temp && idx < loc) {
+		
+		temp = temp->next;
+		idx++;	
+	}
+	
+	if (temp && idx == loc) {
+		
+		return temp->dat;
+	}
+
+	Vector v;
+	init_vec(&v);
+
+	return v;
+}
+
+void set_node(Node* root, Vector dat, int loc) {
+	
+	if (!root) {
+		
+		return;
+	}
+
+	int idx = 0;
+	Node* cur = root;
+
+	while (cur && idx < loc) {
+		
+		cur = cur->next;
+		idx++;
+	}
+
+	if (!cur) {
+		
+		// if loc is larger than list size, cur will end up as nullptr
+
+		return;
+	}
+
+	// data is a Vector, not a Vector*
+	// it belongs to the struct Node cur
+
+	cur->dat = dat;
+}
+
 Node* insert(Node* root, Vector dat, int loc) {
 	
-	if (root == nullptr) {
-
-		root = new Node();
-		root->next = nullptr;
-		root->dat = dat;
-
-		return root;
-	}	
-	
-	if (loc == 0) {
-
-		// insert head
-
-		Node* in = new Node();
-        	in->dat = dat;
-        	in->next = root;
-
-        	return in;
-	}
-	else if (loc < 0) {
+	if (loc < 0) {
 		
 		// do nothing
 
 		return root;
 	}
 
-	// insert body or tail
-	// idx starts at 1 because the iterating node "prev" is the node previous to the
-	// node we want to insert
-	// prev will start at root
-	// if desired loc is beyond size, insert gets appended to tail
+	int idx = 0;
+	Node* cur = root;
+	Node* prev = nullptr;
 
-	int idx = 1;
-	Node* in = new Node();
-	Node* prev = root;
-	in->dat = dat;
-
-	while (prev->next != nullptr && idx < loc) {
+	while (cur && idx < loc) {
 		
-		prev = prev->next;
+		prev = cur;
+		cur = cur->next;
 		idx++;
 	}	
-	
-	in->next = prev->next;
-	prev->next = in;
+
+	// always inserting Node* in
+	// in next might be nullptr
+
+	Node* in = new Node();
+	in->dat = dat;
+	in->next = cur;	
+
+	if (prev) {
+
+		prev->next = in;
+	}
+	else {
+		
+		// prev is null
+		// therefore loc is 0
+		// or root is nullptr
+		// return new head Node* in
+
+		return in;
+	}
 
 	return root;
 }
 
 Node* remove(Node* root, int loc) {
-	
-	if (root == nullptr) {
-		
-		return nullptr;
-	}
-	
-	if (loc == 0) {
-		
-		Node* newRoot = root->next;
 
-		delete root;
-		return newRoot;
+	if (loc < 0 || !root) {
+		
+		return root;
 	}
 
-	Node* prev = root;
-	Node* cur = root->next;
-	int idx = 1;
+	Node* prev = nullptr;
+	Node* cur = root;
+	int idx = 0;
 	
-	while (cur != nullptr && idx < loc) {
+	while (cur && idx < loc) {
+		
 		prev = cur;
 		cur = cur->next;
 		idx++;
 	}
 
-	if (cur == nullptr) {
-	
+	if (!cur) {
+		
+		// root is null
 		return root;
 	}
+	
+	if (prev) {
+		
+		// root is not null
+		// loc is greater than 0
+		// loc may be greater than size
 
-	prev->next = cur->next;
+		prev->next = cur->next;
+	}
+	else {
+		
+		// loc is 0
+		root = cur->next;
+	}
+
+	// return new head
 
 	delete cur;
 	return root;

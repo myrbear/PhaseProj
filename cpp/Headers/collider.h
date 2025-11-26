@@ -11,7 +11,7 @@ struct Collider {
 
 	Vector _pos;
         Quaternion _rot;
-        Vector _verts[VERT_COUNT];
+        Node* _verts;
         Vector _scale;
 };
 
