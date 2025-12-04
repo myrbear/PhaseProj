@@ -31,7 +31,12 @@ void init_vec(Vector* v) {
 
 	// Vector v; &v
 	// Vector* v; v
-
+	
+	if (!v) {
+	
+		cout << "vector is nullptr" << endl;
+	}
+	
 	(*v)._x = 0;
 	(*v)._y = 0;
 	(*v)._z = 0;

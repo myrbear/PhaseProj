@@ -6,7 +6,10 @@
 
 */
 
+#include <iostream>
 #include "../Headers/ll.h"
+
+using namespace std;
 
 Node* clear(Node* root) {
 	
@@ -100,19 +103,25 @@ Node* insert(Node* root, Vector dat, int loc) {
 	// always inserting Node* in
 	// in next might be nullptr
 
+	cout << "seg fault before new node?" << endl;
+
 	Node* in = new Node();
 	in->dat = dat;
 
 	if (cur == root) {
+		
 		in->next = cur;
 	}
 	else {
+	
 		in->next = nullptr;
 	}
 
 	if (prev) {
 
 		prev->next = in;
+		cout << "seg fault before return root?" << endl;
+		return root;
 	}
 	else {
 		
@@ -120,11 +129,9 @@ Node* insert(Node* root, Vector dat, int loc) {
 		// therefore loc is 0
 		// or root is nullptr
 		// return new head Node* in
-
+		cout << "seg fault before return in?" << endl;
 		return in;
 	}
-
-	return root;
 }
 
 Node* remove(Node* root, int loc) {

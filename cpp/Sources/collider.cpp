@@ -109,31 +109,59 @@ Vector get_farthest(Collider col, Vector dir) {
 	// find the vector that is farthest in given direction (use dot product)
 	// then return that vector in world space by adding position
 
+	cout << "in dir: ";
+	p_vec(dir);
+	cout << endl;
+
 	dir = norm(dir);
-	
+
+	cout << "norm: ";
+	p_vec(dir);
+	cout << endl;
+
 	int targ_idx = 0;
-	int i = 0;
+	Vector farthest;
 	float max_dot = FLT_MIN;
 
 	Node* temp = col._verts;
 
+	cout << "pos: ";
+	p_vec(col._pos);
+	cout << endl;
+
 	while (temp) {
 
-		Vector abt_origin = sub_vec(temp->dat, col._pos);	
-		float d = dot(abt_origin, dir);
-		
+		float d = dot(temp->dat, dir);
+
+		cout << "vert local pos: ";
+		p_vec(temp->dat);
+		cout << endl;
+
+		Vector world_pos = add_vec(temp->dat, col._pos);
+
+		cout << "vert world pos: ";
+		p_vec(world_pos);
+		cout << endl;
+
+		cout << "dot: " << d << endl;
+
 		if (d > max_dot) {
 			
 			max_dot = d;
-			targ_idx = i;
+			farthest = temp->dat;
 		}
 
-		i++;
 		temp = temp->next;
 	}
 
-	Vector targ_vec = traverse(col._verts, targ_idx);
-	Vector sum = add_vec(col._pos, targ_vec);
+	// col._verts is local usually -1, -1 to 1, 1
+	// add pos to get a vertex's world position
+	
+	Vector sum = add_vec(col._pos, farthest);
+	
+	cout << "farthest vec world pos: ";
+	p_vec(sum);
+	cout << endl;
 
 	return sum;
 }
@@ -148,26 +176,43 @@ Vector support(Collider col0, Collider col1, Vector dir) {
 	// this offset will be treated as a point (same offset, but starts at origin) and will be added to the simplex
 
 	Vector n_dir = mul_vec(dir, -1);
-	Vector sup0 = get_farthest(col0, dir);
 	
 	cout << "dir: ";
 	p_vec(dir);
 	cout << endl;
+
 	cout << "n_dir: ";
 	p_vec(n_dir);
 	cout << endl;
 
-	cout << "farthest A: ";
-	p_vec(sup0);
 	cout << endl;
+	cout << "-- getting farthest for A --" << endl;
+	cout << endl;
+	Vector sup0 = get_farthest(col0, dir);
+	
+	cout << "farthest A: ";
+        p_vec(sup0);
+        cout << endl;
 
+	cout << endl;
+	cout << "-- getting farthest for B --" << endl;
+	cout << endl;
 	Vector sup1 = get_farthest(col1, n_dir);
 	
 	cout << "farthest B: ";
 	p_vec(sup1);
-	cout << endl;	
+	cout << endl;
 
+        cout << "n_dir: ";
+        p_vec(n_dir);
+        cout << endl;
+
+	cout << endl;
 	Vector off = sub_vec(sup0, sup1);
+	cout << "-- off: ";
+	p_vec(off);
+	cout << "-- ";
+	cout << endl;
 
 	return off;
 }
@@ -192,6 +237,8 @@ void line_case(Node* simplex, Vector* dir) {
 	Vector abP = cross(ab, aoXab);
 	
 	(*dir) = abP;
+	cout << "dir updated to: ";
+	p_vec((*dir));
 }
 
 int tri_case(Node* simplex, Vector* dir) {
@@ -328,16 +375,44 @@ int tetra_case(Node* simplex, Vector* dir) {
 }
 
 int simplex_switch(Node* simplex, Vector* dir) {
-	
+
+
+cout << endl;
+cout << "-- SIMPLEX SWITCH --" << endl;
+cout << endl;
+
+
 	Node* temp = simplex;
-	
+/*
 	while (temp) {
-		
+
+		cout << "seg fault in simplex switch?" << endl;
+		if (temp == nullptr) {
+			cout << "temp is null" << endl;
+		}
+		cout << "print fail?" << endl;
 		p_vec(temp->dat);
+		cout << "print success" << endl;
 		temp = temp->next;
+		cout << "seg fault after update?" << endl;
+	}
+*/
+	cout << "seg fault after loop?" << endl;
+
+	cout << "seg fault before simplex switch actual switch?" << endl;
+	
+	int idx = 0;
+
+	while (temp && idx < 100) {
+
+		cout << " idx: " << idx << endl;
+		temp = temp->next;
+		idx++;
 	}
 
-	switch (simplex_idx) {
+	cout << "simplex size is: " << idx << endl;
+
+	switch (idx) {
 		
 		case 2:
 			cout << "line case running" << endl;	
@@ -355,65 +430,44 @@ int simplex_switch(Node* simplex, Vector* dir) {
 	return 0;
 }
 
-Vector intersect(Collider* col0, Collider* col1) {
+int intersect(Collider* col0, Collider* col1) {
 		
-	Vector result;
-	
-	init_vec(&result);
-	
 	int attempts = 10;
 	Node* simplex;
 	Vector dir = sub_vec(col0->_pos, col1->_pos);
 	Vector sup = support(*col0, *col1, dir);
-	
-        cout << "dir: ";
-        p_vec(dir);
-        cout << endl;
-	
-	cout << "sup: ";	
-	p_vec(sup);  
-	cout << endl;
-	
 	dir = mul_vec(sup, -1);
+	simplex = insert(simplex, sup, 0);
 
 	for (int i = 0; i < attempts; i++) {
 		
 		sup = support(*col0, *col1, dir);
 		float d = dot(sup, dir);
+		dir = mul_vec(sup, -1);
 
-		cout << "sup: ";
-		p_vec(sup);
 		cout << endl;
-
-		cout << "dir: ";
-		p_vec(dir);
-		cout << endl;
-
 		cout << "dot: " << d << endl;
+		cout << endl;
 
 		if (d <= 0) {
-			cout << "d <= 0" << endl;	
-			return result;
+			cout << "d <= 0" << endl;
+			//simplex = clear(simplex);
+			return 0;
 		}
 
-		insert(simplex, sup, 0);
-
+		cout << "fault before insert?" << endl;
+		simplex = insert(simplex, sup, 0);
+		cout << "seg fault after insert?" << endl;
+	
 		if (simplex_switch(simplex, &dir)) {
-						
-			Vector ret;
-			init_vec(&ret);
-			ret._x = 1;
-			return ret;	
+			cout << "fault before collision, clear?" << endl;
+			//simplex = clear(simplex);
+			return 1;
 		}
 	}
 	
-	cout << traverse(simplex, 0)._x << endl;
-	cout << "test" << endl;	
-	
-	Vector vec;
-
-	init_vec(&vec);
-
-	return vec;
+	cout << "fault before end clear?" << endl;
+	//simplex = clear(simplex);
+	return 0;
 }
 

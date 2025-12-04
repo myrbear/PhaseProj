@@ -20,7 +20,7 @@ void init_col(Collider* col);
 Vector** gen_faces(Vector* v_arr, Vector dir);
 Vector get_farthest(Collider col0, Vector dir);
 Vector support(Collider* col0, Collider* col1, Vector dir);
-Vector intersect(Collider* col0, Collider* col1);
+int intersect(Collider* col0, Collider* col1);
 
 #endif // COLLIDER_H
 

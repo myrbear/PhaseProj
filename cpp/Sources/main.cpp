@@ -17,15 +17,12 @@ int main() {
 	col1._pos._x = 1;
 	//col1._pos._z = 0.5f;
 
-	//p_col(col0);
-	//p_col(col1);	
+	p_col(col0);
+	p_col(col1);	
 	
-	Vector v = intersect(&col0, &col1);
-
-	//p_col(col0);
-	//p_col(col1);
-
-	cout << "hi ..." << endl;
+	int flag = intersect(&col0, &col1);
+	
+	cout << "hi ... " << flag << endl;
 
 	return 0;
 }
