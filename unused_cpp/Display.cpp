@@ -190,3 +190,4 @@ void Display::display() {
 bool Display::isOpen() const {
     return window.isOpen();
 }
+
