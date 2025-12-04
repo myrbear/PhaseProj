@@ -1,4 +1,3 @@
-
 /*
 
 	author: Myron Lafty
@@ -43,8 +42,8 @@ void init_col(Collider* col) {
 
 	col->_verts = insert(col->_verts, dat0, 0);
 	col->_verts = insert(col->_verts, dat1, 1);
-	col->_verts = insert(col->_verts, dat2, 2);
-	col->_verts = insert(col->_verts, dat3, 3);	
+       	col->_verts = insert(col->_verts, dat2, 2);
+	col->_verts = insert(col->_verts, dat3, 3);
 }
 
 void p_col(Collider col) {
@@ -53,17 +52,17 @@ void p_col(Collider col) {
 	// (adds position)
 
 	Node* temp = col._verts;
-
+	
 	while (temp) {
-		
+
 		Vector v = temp->dat;
-		Vector sum = add_vec(col._pos, v);
+                Vector sum = add_vec(col._pos, v);
 
-		p_vec(sum);
-
+                p_vec(sum);
+		
 		temp = temp->next;
 	}
-	
+
 	cout << endl;
 }
 
@@ -151,10 +150,17 @@ Vector support(Collider col0, Collider col1, Vector dir) {
 	Vector n_dir = mul_vec(dir, -1);
 	Vector sup0 = get_farthest(col0, dir);
 	
+	cout << "dir: ";
+	p_vec(dir);
+	cout << endl;
+	cout << "n_dir: ";
+	p_vec(n_dir);
+	cout << endl;
+
 	cout << "farthest A: ";
 	p_vec(sup0);
 	cout << endl;
-	
+
 	Vector sup1 = get_farthest(col1, n_dir);
 	
 	cout << "farthest B: ";
@@ -355,15 +361,14 @@ Vector intersect(Collider* col0, Collider* col1) {
 	
 	init_vec(&result);
 	
-	int attempts = 100;
+	int attempts = 10;
 	Node* simplex;
 	Vector dir = sub_vec(col0->_pos, col1->_pos);
 	Vector sup = support(*col0, *col1, dir);
-
 	
-                cout << "dir: ";
-                p_vec(dir);
-                cout << endl;
+        cout << "dir: ";
+        p_vec(dir);
+        cout << endl;
 	
 	cout << "sup: ";	
 	p_vec(sup);  

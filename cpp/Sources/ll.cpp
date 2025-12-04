@@ -102,7 +102,13 @@ Node* insert(Node* root, Vector dat, int loc) {
 
 	Node* in = new Node();
 	in->dat = dat;
-	in->next = cur;	
+
+	if (cur == root) {
+		in->next = cur;
+	}
+	else {
+		in->next = nullptr;
+	}
 
 	if (prev) {
 

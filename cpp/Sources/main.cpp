@@ -13,15 +13,18 @@ int main() {
 	init_col(&col1);	
 
 	//col1._pos._x = 3;
-	col1._pos._y = 5.5f;
+	col1._pos._y = 1;
+	col1._pos._x = 1;
 	//col1._pos._z = 0.5f;
 
 	//p_col(col0);
 	//p_col(col1);	
 	
-//	Vector v = intersect(&col0, &col1);
+	Vector v = intersect(&col0, &col1);
 
-//	cout << v._x << " " << v._y << " " << v._z << endl;
+	//p_col(col0);
+	//p_col(col1);
+
 	cout << "hi ..." << endl;
 
 	return 0;
