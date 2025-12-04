@@ -103,8 +103,6 @@ Node* insert(Node* root, Vector dat, int loc) {
 	// always inserting Node* in
 	// in next might be nullptr
 
-	cout << "seg fault before new node?" << endl;
-
 	Node* in = new Node();
 	in->dat = dat;
 
@@ -120,7 +118,6 @@ Node* insert(Node* root, Vector dat, int loc) {
 	if (prev) {
 
 		prev->next = in;
-		cout << "seg fault before return root?" << endl;
 		return root;
 	}
 	else {
@@ -129,7 +126,6 @@ Node* insert(Node* root, Vector dat, int loc) {
 		// therefore loc is 0
 		// or root is nullptr
 		// return new head Node* in
-		cout << "seg fault before return in?" << endl;
 		return in;
 	}
 }

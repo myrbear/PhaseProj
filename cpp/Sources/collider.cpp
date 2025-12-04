@@ -1,3 +1,4 @@
+
 /*
 
 	author: Myron Lafty
@@ -120,8 +121,9 @@ Vector get_farthest(Collider col, Vector dir) {
 	cout << endl;
 
 	int targ_idx = 0;
-	Vector farthest;
 	float max_dot = FLT_MIN;
+	Vector farthest;
+	init_vec(&farthest);
 
 	Node* temp = col._verts;
 
@@ -207,11 +209,10 @@ Vector support(Collider col0, Collider col1, Vector dir) {
         p_vec(n_dir);
         cout << endl;
 
-	cout << endl;
 	Vector off = sub_vec(sup0, sup1);
-	cout << "-- off: ";
+	
+	cout << "off: ";
 	p_vec(off);
-	cout << "-- ";
 	cout << endl;
 
 	return off;
@@ -233,11 +234,23 @@ void line_case(Node* simplex, Vector* dir) {
 	Vector ao = mul_vec(a, -1);
 	Vector ab = sub_vec(b, a);
 
+	cout << "ao: ";
+	p_vec(ao);
+	cout << endl;
+	cout << "ab: ";
+	p_vec(ab);
+	cout << endl;
 	Vector aoXab = cross(ao, ab);
+	
+	cout << "aoXab: ";
+	p_vec(aoXab);
+	cout << endl;
+
 	Vector abP = cross(ab, aoXab);
 	
 	(*dir) = abP;
-	cout << "dir updated to: ";
+	
+	cout << "abP: ";
 	p_vec((*dir));
 }
 
@@ -260,43 +273,95 @@ int tri_case(Node* simplex, Vector* dir) {
 	float dt = dot(abP, ao);
 	float dt1 = dot(acP, ao);
 
+	cout << "a: ";
+	p_vec(a);
+	cout << endl;
+
+	cout << "b: ";
+	p_vec(b);
+	cout << endl;
+
+	cout << "c: ";
+	p_vec(c);
+	cout << endl;
+
+	cout << "abP o ao: " << dt << endl;
+	cout << "acP o ao: " << dt1 << endl;
+
 	if (dt > EPSILON) {
 		
-		clear(simplex);
-		insert(simplex, a, 0);
-		insert(simplex, b, 1);
+		simplex = clear(simplex);
+		simplex = new Node();
+		simplex->dat = a;
+		simplex->next = nullptr;
+		simplex = insert(simplex, b, 1);
 		(*dir) = abP;
+
+		cout << "CLEAR" << endl;
+		cout << "INSERT A at 0: ";
+		p_vec(a);
+		cout << endl;
+		cout << "INSERT B at 1: ";
+		p_vec(b);
+		cout << endl;
 	}
 	else if (dt1 > EPSILON) {
 		
-		clear(simplex);
-		insert(simplex, a, 0);
-		insert(simplex, c, 1);
+		simplex = clear(simplex);
+		simplex = new Node();
+		simplex->dat = a;
+		simplex->next = nullptr;
+		simplex = insert(simplex, c, 1);
 		(*dir) = acP;
+
+		cout << "CLEAR" << endl;
+		cout << "INSERT A at 0: ";
+		p_vec(a);
+		cout << endl;
+
+		cout << "INSERT C at 1: ";
+		p_vec(c);
+		cout << endl;
 	}
 	else {
 		
 		Vector abc = cross(ab, ac);
 		float dt2 = dot(abc, ao);
-	
+		
+		cout << "contains origin" << endl;
+
 		if (dt2 > EPSILON) {
 			
 			// normal faces origin, swap verts to face away
 			// make search direction the unswapped normal
 			
-			clear(simplex);
-			insert(simplex, a, 0);
-			insert(simplex, c, 1);
-			insert(simplex, b, 2);
+			simplex = clear(simplex);
+			simplex = insert(simplex, a, 0);
+			simplex = insert(simplex, c, 1);
+			simplex = insert(simplex, b, 2);
 			(*dir) = abc;
 			
+			
+                cout << "CLEAR" << endl;
+                cout << "INSERT A at 0: ";
+                p_vec(a);
+                cout << endl;
+
+                cout << "INSERT C at 1: ";
+                p_vec(c);
+                cout << endl;
+
+                cout << "INSERT B at 2: ";
+                p_vec(b);
+                cout << endl;
+
 			return 1;
 		}
 		else {
 			
 			// normal remains pointing away from origin
 			// search direction toward origin
-
+			
 			(*dir) = mul_vec(abc, -1);
 			
 			return 1;
@@ -340,30 +405,30 @@ int tetra_case(Node* simplex, Vector* dir) {
 
 	if (bacDot > EPSILON) {
 	
-		clear(simplex);
-		insert(simplex, b, 0);
-		insert(simplex, c, 1);
-		insert(simplex, a, 2);
+		simplex = clear(simplex);
+		simplex =insert(simplex, b, 0);
+		simplex =insert(simplex, c, 1);
+		simplex =insert(simplex, a, 2);
 		*dir = bac;
 	
 		return 0;
 	}
 	else if (cadDot > EPSILON) {
                 
-		clear(simplex);
-                insert(simplex, c, 0);
-                insert(simplex, d, 1);
-                insert(simplex, a, 2);		
+		simplex = clear(simplex);
+                simplex = insert(simplex, c, 0);
+                simplex = insert(simplex, d, 1);
+                simplex = insert(simplex, a, 2);		
 		*dir = cad;
 		
 		return 0;
 	}
 	else if (dabDot > EPSILON) {
 		
-		clear(simplex);
-                insert(simplex, d, 0);
-                insert(simplex, b, 1);
-                insert(simplex, a, 2);
+		simplex = clear(simplex);
+                simplex = insert(simplex, d, 0);
+                simplex = insert(simplex, b, 1);
+                simplex = insert(simplex, a, 2);
 		*dir = dab;
 		
 		return 0;
@@ -376,52 +441,38 @@ int tetra_case(Node* simplex, Vector* dir) {
 
 int simplex_switch(Node* simplex, Vector* dir) {
 
-
-cout << endl;
-cout << "-- SIMPLEX SWITCH --" << endl;
-cout << endl;
-
+	cout << endl;
+	cout << "-- Simplex Switch --" << endl;
+	cout << endl;
 
 	Node* temp = simplex;
-/*
-	while (temp) {
-
-		cout << "seg fault in simplex switch?" << endl;
-		if (temp == nullptr) {
-			cout << "temp is null" << endl;
-		}
-		cout << "print fail?" << endl;
-		p_vec(temp->dat);
-		cout << "print success" << endl;
-		temp = temp->next;
-		cout << "seg fault after update?" << endl;
-	}
-*/
-	cout << "seg fault after loop?" << endl;
-
-	cout << "seg fault before simplex switch actual switch?" << endl;
-	
 	int idx = 0;
-
+	
 	while (temp && idx < 100) {
-
-		cout << " idx: " << idx << endl;
+		cout << "idx: " << idx << endl;
 		temp = temp->next;
 		idx++;
 	}
 
 	cout << "simplex size is: " << idx << endl;
-
+	
 	switch (idx) {
 		
 		case 2:
-			cout << "line case running" << endl;	
+			cout << endl;
+			cout << "-- line case running --" << endl;	
+			cout << endl;
 			line_case(simplex, dir);
+			break;
 		case 3:
-			cout << "tri case running" << endl;
+			cout << endl;
+			cout << "-- tri case running --" << endl;
+			cout << endl;
 			return tri_case(simplex, dir);
 		case 4:
-			cout << "tetra case running" << endl;
+			cout << endl;
+			cout << "-- tetra case running --" << endl;
+			cout << endl;
 			return tetra_case(simplex, dir);
 		default:
 			break;
@@ -437,13 +488,43 @@ int intersect(Collider* col0, Collider* col1) {
 	Vector dir = sub_vec(col0->_pos, col1->_pos);
 	Vector sup = support(*col0, *col1, dir);
 	dir = mul_vec(sup, -1);
-	simplex = insert(simplex, sup, 0);
+	
+	simplex = new Node();
+	simplex->dat = sup;
+	simplex->next = nullptr;
+
+	cout << "INSERT: ";
+	p_vec(simplex->dat);
+	cout << endl;
 
 	for (int i = 0; i < attempts; i++) {
+	
+		cout << endl;
+		cout << "-- Start Iteration --" << endl;
+		cout << endl;
 		
+		Node* temp = simplex;
+
+		while (temp) {
+		
+			cout << "vert: ";
+			p_vec(temp->dat);
+			cout << endl;
+
+			temp = temp->next;
+		}
+
+		cout << "dir: ";
+		p_vec(dir);
+		cout << endl;
+
 		sup = support(*col0, *col1, dir);
 		float d = dot(sup, dir);
 		dir = mul_vec(sup, -1);
+
+		cout << "sup: ";
+		p_vec(sup);
+		cout << endl;
 
 		cout << endl;
 		cout << "dot: " << d << endl;
@@ -451,23 +532,24 @@ int intersect(Collider* col0, Collider* col1) {
 
 		if (d <= 0) {
 			cout << "d <= 0" << endl;
-			//simplex = clear(simplex);
+			simplex = clear(simplex);
 			return 0;
 		}
 
-		cout << "fault before insert?" << endl;
 		simplex = insert(simplex, sup, 0);
-		cout << "seg fault after insert?" << endl;
-	
+		
+		cout << "INSERT: ";
+		p_vec(simplex->dat);
+		cout << endl;
+
 		if (simplex_switch(simplex, &dir)) {
-			cout << "fault before collision, clear?" << endl;
-			//simplex = clear(simplex);
+			simplex = clear(simplex);
 			return 1;
 		}
 	}
 	
-	cout << "fault before end clear?" << endl;
-	//simplex = clear(simplex);
+	simplex = clear(simplex);
+	
 	return 0;
 }
 
