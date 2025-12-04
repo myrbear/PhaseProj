@@ -1,5 +1,5 @@
 /*******************************************************
- * TEMPORARY JS PHASE ENGINE (SIMULATES TYLER+MYRON API)
+ * TEMPORARY JS PHASE ENGINE (SIMULATES +MYRON API)
  * -----------------------------------------------------
  * Positions are stored as TOP-LEFT (like your objects).
  * Collisions are handled using circle bounds with radius r.
