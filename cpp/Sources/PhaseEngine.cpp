@@ -157,5 +157,11 @@ void PhaseEngine::SimulatePhysics(float deltaTime) {
     for(auto it = BeginPhysIt(); it != EndPhysIt(); it++) {
         // Dereference iterator for object pointer
         GameObject* gameObject = *it;
+	it++;
+    	GameObject* gameObject1 = *it;
+    	
+	if (gameObject1 != nullptr) {
+		int flag = intersect(&gameObject->collider, &gameObject->collider);
+	}
     }
 }
