@@ -1,21 +1,26 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include "../Headers/vector.h"
-#include "../Headers/quaternion.h"
+#include "vector.h"
+#include "quaternion.h"
+#include "ll.h"
 
 #define VERT_COUNT 10
 
-class Collider {
-    public:
-        Collider();
+struct Collider {
 
-        Vector _pos;
+	Vector _pos;
         Quaternion _rot;
-        Vector _verts[VERT_COUNT];
+        Node* _verts;
         Vector _scale;
-    private:
-
 };
 
+void p_col(Collider col);
+void init_col(Collider* col);
+Vector** gen_faces(Vector* v_arr, Vector dir);
+Vector get_farthest(Collider col0, Vector dir);
+Vector support(Collider* col0, Collider* col1, Vector dir);
+int intersect(Collider* col0, Collider* col1);
+
 #endif // COLLIDER_H
+

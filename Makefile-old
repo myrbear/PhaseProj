@@ -2,7 +2,8 @@ CC = g++
 CFLAGS = -Wall -O2
 
 # List all source files here
-SRC = 	PhaseEngine.cpp \
+SRC = 		main.cpp \
+		PhaseEngine.cpp \
 		GameObject.cpp \
 		ObjectBuffer.cpp \
 		collider.cpp \
