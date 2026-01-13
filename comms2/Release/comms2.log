@@ -1,0 +1,7 @@
+﻿  dllmain.cpp
+     Creating library C:\Users\myrbear\Documents\proj\comms\Release\comms2.lib and object C:\Users\myrbear\Documents\proj\comms\Release\comms2.exp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 2 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  comms2.vcxproj -> C:\Users\myrbear\Documents\proj\comms\Release\comms2.dll

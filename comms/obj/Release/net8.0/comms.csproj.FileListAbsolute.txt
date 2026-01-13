@@ -1,0 +1,14 @@
+C:\Users\myrbear\Documents\proj\comms\bin\Release\net8.0\comms.exe
+C:\Users\myrbear\Documents\proj\comms\bin\Release\net8.0\comms.deps.json
+C:\Users\myrbear\Documents\proj\comms\bin\Release\net8.0\comms.runtimeconfig.json
+C:\Users\myrbear\Documents\proj\comms\bin\Release\net8.0\comms.dll
+C:\Users\myrbear\Documents\proj\comms\bin\Release\net8.0\comms.pdb
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\comms.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\comms.AssemblyInfoInputs.cache
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\comms.AssemblyInfo.cs
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\comms.csproj.CoreCompileInputs.cache
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\comms.dll
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\refint\comms.dll
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\comms.pdb
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\comms.genruntimeconfig.cache
+C:\Users\myrbear\Documents\proj\comms\obj\Release\net8.0\ref\comms.dll
