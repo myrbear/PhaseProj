@@ -7,7 +7,7 @@ ObjectBuffer::ObjectBuffer() {
 }
 
 
-int ObjectBuffer::CreateObject() {
+int ObjectBuffer::CreateObject(float side, float mass) {
     if(buffer_index == OBJECT_BUFFER_SIZE) {
         // Object buffer full, return invalid Id
         return -1;
@@ -17,7 +17,32 @@ int ObjectBuffer::CreateObject() {
         int new_id = buffer_index;
 
         // Enqueue update
-        ObjectChangeNode* node = new ObjectChangeNode(OBJECT_CREATE, new_id);
+        ObjectChangeNode* node = new ObjectChangeNode(OBJECT_CREATE, new_id, side, mass, 0);
+        Enqueue(node);
+
+        // Increment index
+        buffer_index++;
+        while(buffer_index < OBJECT_BUFFER_SIZE && read_buffer_ptr[buffer_index] != NULL) {
+            buffer_index++;
+        }
+
+        // Object will be added, return id
+        return new_id;
+    }
+}
+
+
+int ObjectBuffer::CreateStaticObject(float side) {
+    if(buffer_index == OBJECT_BUFFER_SIZE) {
+        // Object buffer full, return invalid Id
+        return -1;
+    }
+    else {
+        // New Id is buffer index
+        int new_id = buffer_index;
+
+        // Enqueue update
+        ObjectChangeNode* node = new ObjectChangeNode(OBJECT_CREATE, new_id, side, 0, 1);
         Enqueue(node);
 
         // Increment index
@@ -53,14 +78,14 @@ GameObject ObjectBuffer::GetGameObject(int id) {
     // Validate Id
     if(id < 0 || id >= OBJECT_BUFFER_SIZE) {
         cout << "ERROR: Invalid Object Id" << endl;
-        return GameObject(-1);
+        return GameObject(-1, 0, 0, false);
     }
 
     // Retrieve object
     GameObject* ptr = read_buffer_ptr[id];
     if(ptr == NULL) {
         cout << "ERROR: Invalid Object Id" << endl;
-        return GameObject(-1);
+        return GameObject(-1, 0, 0, false);
     }
     else {
         return *ptr;
@@ -74,14 +99,14 @@ bool ObjectBuffer::Full() {
 }
 
 
-void ObjectBuffer::SetPosition(int id, float x, float y, float z) {
+void ObjectBuffer::SetPosition(int id, float x, float y) {
     // Enqueue change
-    ObjectChangeNode* node = new ObjectChangeNode(POSITION_SET, id, x, y, z);
+    ObjectChangeNode* node = new ObjectChangeNode(POSITION_SET, id, x, y);
     Enqueue(node);
 }
 
-void ObjectBuffer::SetRotation(int id, float x, float y, float z, float w) {
-    ObjectChangeNode* node = new ObjectChangeNode(ROTATION_SET, id, x, y, z, w);
+void ObjectBuffer::SetRotation(int id, float r) {
+    ObjectChangeNode* node = new ObjectChangeNode(ROTATION_SET, id, r);
     Enqueue(node);
 }
 
@@ -90,14 +115,14 @@ void ObjectBuffer::SetVelocity(int id, float vx, float vy) {
     Enqueue(node);
 }
 
-void ObjectBuffer::AddPosition(int id, float dx, float dy, float dz) {
-    ObjectChangeNode* node = new ObjectChangeNode(POSITION_ADD, id, dx, dy, dz);
+void ObjectBuffer::AddPosition(int id, float dx, float dy) {
+    ObjectChangeNode* node = new ObjectChangeNode(POSITION_ADD, id, dx, dy);
     Enqueue(node);
 }
 
 
-void ObjectBuffer::AddRotation(int id, float dx, float dy, float dz, float dw) {
-    ObjectChangeNode* node = new ObjectChangeNode(ROTATION_ADD, id, dx, dy, dz, dw);
+void ObjectBuffer::AddRotation(int id, float dr) {
+    ObjectChangeNode* node = new ObjectChangeNode(ROTATION_ADD, id, dr);
     Enqueue(node);
 }
 
@@ -144,8 +169,9 @@ void ObjectBuffer::ApplyChanges() {
         // Check if creation is needed
         if(node->change_type == OBJECT_CREATE) {
             // Allocate memory for two objects
-            GameObject* read_obj = new GameObject(node->id);
-            GameObject* write_obj = new GameObject(node->id);
+            bool is_static = (node->val3 == 1);
+            GameObject* read_obj = new GameObject(node->id, node->val1, node->val2, is_static);
+            GameObject* write_obj = new GameObject(node->id, node->val1, node->val2, is_static);
 
             // Insert object pointer
             read_buffer_ptr[node->id] = read_obj;
@@ -175,32 +201,26 @@ void ObjectBuffer::ApplyChanges() {
                 write_buffer_ptr[node->id] = NULL;
                 break;
             case POSITION_SET:
-                obj->collider._pos._x = node->val1;
-                obj->collider._pos._y = node->val2;
-                obj->collider._pos._z = node->val3;
+                obj->position.x = node->val1;
+                obj->position.y = node->val2;
                 break;
             case ROTATION_SET:
-                obj->collider._rot._x += node->val1;
-                obj->collider._rot._y += node->val2;
-                obj->collider._rot._z += node->val3;
-                obj->collider._rot._w += node->val4;
+                obj->rotation += node->val1;
                 break;
             case VELOCITY_SET:
-                // Needs implemented
+                obj->velocity.x = node->val1;
+                obj->velocity.y = node->val2;
                 break;
             case POSITION_ADD:
-                obj->collider._pos._x += node->val1;
-                obj->collider._pos._y += node->val2;
-                obj->collider._pos._z += node->val3;
+                obj->position.x += node->val1;
+                obj->position.y += node->val2;
                 break;
             case ROTATION_ADD:
-                obj->collider._rot._x += node->val1;
-                obj->collider._rot._y += node->val2;
-                obj->collider._rot._z += node->val3;
-                obj->collider._rot._w += node->val4;
+                obj->rotation += node->val1;
                 break;
             case VELOCITY_ADD:
-                // Needs implemented
+                obj->velocity.x += node->val1;
+                obj->velocity.y += node->val2;
                 break;
             default:
                 cout << "ERROR: Invalid change type" << endl;

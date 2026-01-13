@@ -57,15 +57,7 @@ void PhaseEngine::RunPhysicsThread() {
         object_buffer.SwapBuffers();
         
         // Run physics calculations
-        SimulatePhysics(frame_time.count());
-        
-        // Test modifying GameObjects
-        
-        for(auto it = BeginPhysIt(); it != EndPhysIt(); it++) {
-            GameObject* obj = *it;
-            
-            obj->collider._pos._y += 1;
-        }
+        SimulatePhysics(60.0 / FRAME_RATE);
         
         // Apply external changes
         object_buffer.ApplyChanges();
@@ -97,8 +89,16 @@ void PhaseEngine::RunPhysicsThread() {
 }
 
 
-int PhaseEngine::CreateObject() {
-    int id = object_buffer.CreateObject();
+int PhaseEngine::CreateObject(float side, float mass) {
+    int id = object_buffer.CreateObject(side, mass);
+    if(id == -1) {
+        cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
+    }
+    return id;
+}
+
+int PhaseEngine::CreateStaticObject(float side) {
+    int id = object_buffer.CreateStaticObject(side);
     if(id == -1) {
         cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
     }
@@ -115,19 +115,19 @@ void PhaseEngine::DeleteObject(int id) {
     object_buffer.DeleteObject(id);
 }
 void PhaseEngine::SetPosition(int id, float x, float y) {
-    object_buffer.SetPosition(id, x, y, 0);
+    object_buffer.SetPosition(id, x, y);
 }
-void PhaseEngine::SetRotation(int id, float x, float y, float z, float w) {
-    object_buffer.SetRotation(id, x, y, z, w);
+void PhaseEngine::SetRotation(int id, float r) {
+    object_buffer.SetRotation(id, r);
 }
 void PhaseEngine::SetVelocity(int id, float vx, float vy) {
     object_buffer.SetVelocity(id, vx, vy);
 }
 void PhaseEngine::AddPosition(int id, float dx, float dy) {
-    object_buffer.AddPosition(id, dx, dy, 0);
+    object_buffer.AddPosition(id, dx, dy);
 }
-void PhaseEngine::AddRotation(int id, float dx, float dy, float dz, float dw){
-    object_buffer.AddRotation(id, dx, dy, dz, dw);
+void PhaseEngine::AddRotation(int id, float dr){
+    object_buffer.AddRotation(id, dr);
 }
 void PhaseEngine::AddVelocity(int id, float dvx, float dvy){
     object_buffer.AddVelocity(id, dvx, dvy);
@@ -153,15 +153,65 @@ ObjectBuffer::ObjectIterator PhaseEngine::EndPhysIt() {
 
 
 void PhaseEngine::SimulatePhysics(float deltaTime) {
-    // Example iterator loop
+    AccumulateForces(deltaTime);
+    IntegrateVelocities(deltaTime);
+    CollisionDetection();
+    CollisionResolution();
+    PositionCorrection();
+}
+
+
+void PhaseEngine::AccumulateForces(float deltaTime) {
     for(auto it = BeginPhysIt(); it != EndPhysIt(); it++) {
-        // Dereference iterator for object pointer
-        GameObject* gameObject = *it;
-	it++;
-    	GameObject* gameObject1 = *it;
-    	
-	if (gameObject1 != nullptr) {
-		int flag = intersect(&gameObject->collider, &gameObject->collider);
-	}
+        GameObject* obj = *it;
+        
+        if(!obj->IsStatic()) {
+            // Gravity
+            obj->velocity.y += deltaTime / 100;
+        }
     }
 }
+
+
+void PhaseEngine::IntegrateVelocities(float deltaTime) {
+    for(auto it = BeginPhysIt(); it != EndPhysIt(); it++) {
+        GameObject* obj = *it;
+
+        if(!obj->IsStatic()) {
+            obj->position.x += deltaTime * obj->velocity.x;
+            obj->position.y += deltaTime * obj->velocity.y;
+            obj->rotation += deltaTime * obj->angular_velocity;
+        }
+    }
+}
+
+
+void PhaseEngine::CollisionDetection() {
+    for(auto ita = BeginPhysIt(); ita != EndPhysIt(); ita++) {
+        auto itb = ita;
+        itb++;
+        while(itb != EndPhysIt()) {
+            // Test for collisions
+            GameObject* obja = *ita;
+            GameObject* objb = *itb;
+
+            if(Collide(obja, objb)) {
+                obja->velocity = {0, 0};
+                objb->velocity = {0, 0};
+            }
+
+            itb++;
+        }
+    }
+}
+
+
+void PhaseEngine::CollisionResolution() {
+
+}
+
+
+void PhaseEngine::PositionCorrection() {
+
+}
+

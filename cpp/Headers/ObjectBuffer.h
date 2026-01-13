@@ -100,14 +100,15 @@ class ObjectBuffer {
         ObjectIterator write_end() { return ObjectIterator(this, OBJECT_BUFFER_SIZE, WRITE, &mtx); }
 
         // Functions
-        int CreateObject();
+        int CreateObject(float side, float mass);
+        int CreateStaticObject(float side);
         void DeleteObject(int id);
         GameObject GetGameObject(int id);
-        void SetPosition(int id, float x, float y, float z);
-        void SetRotation(int id, float x, float y, float z, float w);
+        void SetPosition(int id, float x, float y);
+        void SetRotation(int id, float r);
         void SetVelocity(int id, float vx, float vy);
-        void AddPosition(int id, float dx, float dy, float dz);
-        void AddRotation(int id, float dx, float dy, float dz, float dw);
+        void AddPosition(int id, float dx, float dy);
+        void AddRotation(int id, float dr);
         void AddVelocity(int id, float dvx, float dvy);
         bool Full();
         void SwapBuffers();
@@ -128,13 +129,12 @@ class ObjectBuffer {
         // Only apply changes to GameObjects outside of physics calculations
         struct ObjectChangeNode {
             public:
-                ObjectChangeNode(int _ct, int _id, int _v1=0, int _v2 = 0, int _v3 = 0, int _v4 = 0) : change_type(_ct), id(_id), val1(_v1), val2(_v2), val3(_v3), val4(_v4) {}
+                ObjectChangeNode(int _ct, int _id, float _v1=0, float _v2 = 0, float _v3=0) : change_type(_ct), id(_id), val1(_v1), val2(_v2), val3(_v3) {}
                 int change_type;
                 int id;
                 float val1;
                 float val2;
                 float val3;
-                float val4;
                 ObjectChangeNode* next = NULL;
         };
         ObjectChangeNode* head = NULL;

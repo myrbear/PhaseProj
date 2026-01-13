@@ -5,15 +5,18 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
+#include <cmath>
 #include "../Headers/GameObject.h"
 #include "../Headers/ObjectBuffer.h"
 
 // Windows
+#undef byte
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
+#define NOGDI
+#define NOUSER
 #include <windows.h>
 #include <mmsystem.h>
-#undef byte
 
 #define FRAME_RATE 60
 
@@ -26,7 +29,8 @@ class PhaseEngine {
         PhaseEngine();
         void Run();
         void Stop();
-        int CreateObject();
+        int CreateObject(float side, float mass);
+        int CreateStaticObject(float side);
         void DeleteObject(int id);
         // Object read functions
         // For external use (ALEX)
@@ -36,10 +40,10 @@ class PhaseEngine {
 
         // Object write functions
         void SetPosition(int id, float x, float y);
-        void SetRotation(int id, float x, float y, float z, float w);
+        void SetRotation(int id, float r);
         void SetVelocity(int id, float vx, float vy);
         void AddPosition(int id, float dx, float dy);
-        void AddRotation(int id, float dx, float dy, float dz, float dw);
+        void AddRotation(int id, float dr);
         void AddVelocity(int id, float dvx, float dvy);
 
         bool IsRunning();
@@ -47,6 +51,13 @@ class PhaseEngine {
     private:
         // Main phyisics loop
         void SimulatePhysics(float deltaTime);
+        // Physics stages
+        void AccumulateForces(float deltaTime);
+        void IntegrateVelocities(float deltaTime);
+        void CollisionDetection();
+        void CollisionResolution();
+        void PositionCorrection();
+
         // For physics calculations (MYRON)
         ObjectBuffer::ObjectIterator BeginPhysIt();
         ObjectBuffer::ObjectIterator EndPhysIt();
