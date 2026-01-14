@@ -1,14 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NRTQz7GIzi0=",
+  "dgSpecHash": "fpV9BySBze0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\myrbear\\Documents\\proj\\comms\\comms.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\myrbear\\.nuget\\packages\\microsoft.net.sdk.compilers.toolset\\9.0.102\\microsoft.net.sdk.compilers.toolset.9.0.102.nupkg.sha512",
-    "C:\\Users\\myrbear\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.12\\microsoft.windowsdesktop.app.ref.8.0.12.nupkg.sha512",
-    "C:\\Users\\myrbear\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.12\\microsoft.netcore.app.ref.8.0.12.nupkg.sha512",
-    "C:\\Users\\myrbear\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.12\\microsoft.aspnetcore.app.ref.8.0.12.nupkg.sha512",
-    "C:\\Users\\myrbear\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.12\\microsoft.netcore.app.host.win-x64.8.0.12.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms\\comms.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

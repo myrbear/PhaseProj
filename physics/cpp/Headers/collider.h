@@ -17,9 +17,9 @@ struct Collider {
 
 void p_col(Collider col);
 void init_col(Collider* col);
-Vector** gen_faces(Vector* v_arr, Vector dir);
+Vector** gen_faces(Node* polytope, int len);
 Vector get_farthest(Collider col0, Vector dir);
-Vector support(Collider* col0, Collider* col1, Vector dir);
+Vector support(Collider col0, Collider col1, Vector dir);
 int intersect(Collider* col0, Collider* col1);
 
 #endif // COLLIDER_H

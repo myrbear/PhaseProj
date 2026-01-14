@@ -1,2 +1,6 @@
-C:\Users\myrbear\Documents\proj\comms2\dllmain.cpp;C:\Users\myrbear\Documents\proj\comms2\x64\Debug\dllmain.obj
-C:\Users\myrbear\Documents\proj\comms2\pch.cpp;C:\Users\myrbear\Documents\proj\comms2\x64\Debug\pch.obj
+C:\Users\mzlaf\Documents\proj\phase_proj\physics\cpp\Sources\collider.cpp;C:\Users\mzlaf\Documents\proj\phase_proj\comms2\x64\Debug\collider.obj
+C:\Users\mzlaf\Documents\proj\phase_proj\physics\cpp\Sources\ll.cpp;C:\Users\mzlaf\Documents\proj\phase_proj\comms2\x64\Debug\ll.obj
+C:\Users\mzlaf\Documents\proj\phase_proj\physics\cpp\Sources\quaternion.cpp;C:\Users\mzlaf\Documents\proj\phase_proj\comms2\x64\Debug\quaternion.obj
+C:\Users\mzlaf\Documents\proj\phase_proj\physics\cpp\Sources\vector.cpp;C:\Users\mzlaf\Documents\proj\phase_proj\comms2\x64\Debug\vector.obj
+C:\Users\mzlaf\Documents\proj\phase_proj\comms2\dllmain.cpp;C:\Users\mzlaf\Documents\proj\phase_proj\comms2\x64\Debug\dllmain.obj
+C:\Users\mzlaf\Documents\proj\phase_proj\comms2\pch.cpp;C:\Users\mzlaf\Documents\proj\phase_proj\comms2\x64\Debug\pch.obj

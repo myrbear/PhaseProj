@@ -552,4 +552,3 @@ int intersect(Collider* col0, Collider* col1) {
 	
 	return 0;
 }
-

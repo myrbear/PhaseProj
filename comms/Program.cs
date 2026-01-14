@@ -8,7 +8,7 @@ namespace comms {
             public int a;
             public char b;
         }
-        private const string dllPath = @"C:\Users\myrbear\Documents\proj\comms\x64\Debug\comms2.dll";
+        private const string dllPath = @"C:\Users\mzlaf\Documents\proj\phase_proj\comms\x64\Debug\comms2.dll";
 
         [DllImport(dllPath)]
         private static extern int CppFunction(MyStruct myStruct);

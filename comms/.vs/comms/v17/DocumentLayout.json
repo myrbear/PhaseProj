@@ -1,13 +1,25 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\myrbear\\Documents\\proj\\comms\\",
+  "WorkspaceRootPath": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{36BB5913-E237-4A34-8578-E41D5566EAE5}|comms.csproj|c:\\users\\myrbear\\documents\\proj\\comms\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\dllmain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36BB5913-E237-4A34-8578-E41D5566EAE5}|comms.csproj|c:\\users\\mzlaf\\documents\\proj\\phase_proj\\comms\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{36BB5913-E237-4A34-8578-E41D5566EAE5}|comms.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\myrbear\\Documents\\proj\\comms2\\dllmain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\physics\\cpp\\Sources\\collider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\comms2.rc||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\pch.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\ll.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,11 +29,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:131:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
               "$type": "Bookmark",
@@ -33,28 +49,76 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\myrbear\\Documents\\proj\\comms\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\myrbear\\Documents\\proj\\comms\\Program.cs",
+              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-13T02:09:51.333Z",
+              "WhenOpened": "2026-01-14T17:14:19.569Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "dllmain.cpp",
-              "DocumentMoniker": "C:\\Users\\myrbear\\Documents\\proj\\comms2\\dllmain.cpp",
-              "RelativeDocumentMoniker": "..\\comms2\\dllmain.cpp",
-              "ToolTip": "C:\\Users\\myrbear\\Documents\\proj\\comms2\\dllmain.cpp",
-              "RelativeToolTip": "..\\comms2\\dllmain.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAoAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "comms2.rc",
+              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\comms2.rc",
+              "RelativeDocumentMoniker": "..\\comms2\\comms2.rc",
+              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\comms2.rc",
+              "RelativeToolTip": "..\\comms2\\comms2.rc",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2026-01-13T18:07:28.685Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "collider.cpp",
+              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\physics\\cpp\\Sources\\collider.cpp",
+              "RelativeDocumentMoniker": "..\\physics\\cpp\\Sources\\collider.cpp",
+              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\physics\\cpp\\Sources\\collider.cpp",
+              "RelativeToolTip": "..\\physics\\cpp\\Sources\\collider.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-13T02:14:57.782Z",
+              "WhenOpened": "2026-01-13T18:06:47.869Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "pch.h",
+              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\pch.h",
+              "RelativeDocumentMoniker": "..\\comms2\\pch.h",
+              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\pch.h",
+              "RelativeToolTip": "..\\comms2\\pch.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-01-13T18:06:40.992Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ll.h",
+              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\ll.h",
+              "RelativeDocumentMoniker": "..\\comms2\\ll.h",
+              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\ll.h",
+              "RelativeToolTip": "..\\comms2\\ll.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-01-13T18:06:39.978Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "dllmain.cpp",
+              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\dllmain.cpp",
+              "RelativeDocumentMoniker": "..\\comms2\\dllmain.cpp",
+              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\dllmain.cpp",
+              "RelativeToolTip": "..\\comms2\\dllmain.cpp",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACcAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-01-13T17:58:40.735Z",
               "EditorCaption": ""
             }
           ]
