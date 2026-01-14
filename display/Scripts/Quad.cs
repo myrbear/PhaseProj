@@ -16,11 +16,13 @@ namespace PhaseProj {
         public int _VAO;
         public int _VBO;
         public int _EBO;
+        public Vector3 _Color;
         private Shader _Shader;
         private GameObject _Parent;
 
         public Quad(GameObject parent) {
 
+            _Color = new Vector3(1f, 1f, 1f);
             _Parent = parent;
             _Indices = new int[]
                 {
@@ -69,6 +71,20 @@ namespace PhaseProj {
             Console.WriteLine("Quad not disposed.");
         }
 
+        public Vector2[] GetVertsWorld() {
+            var verts = new Vector2[_Indices.Length];
+
+            for (int i = 0; i < _Indices.Length; i++) {
+                int index = _Indices[i] * 3;
+                float x = _Vertices[index];
+                float y = _Vertices[index + 1];
+                float z = _Vertices[index + 2];
+
+                verts[i] = new Vector2(x, y) * _Parent.GetTransform()._Scale + _Parent.GetTransform()._Position;
+            }
+
+            return verts;
+        }
         public void Dispose() {
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
@@ -87,10 +103,13 @@ namespace PhaseProj {
             GL.BindVertexArray(_VAO);
             GL.UseProgram(_Shader._Handle);
 
-            int transformLoc = GL.GetUniformLocation(_Shader._Handle, "_Transform");
+            int transformLoc = GL.GetUniformLocation(_Shader._Handle, "_Transform"); // never do this
             Matrix4 mat = _Parent.GetTransform()._Transform;
 
+            int colorLoc = GL.GetUniformLocation(_Shader._Handle, "_Color");
+
             GL.UniformMatrix4(transformLoc, false, ref mat);
+            GL.Uniform3(colorLoc, _Color);
 
             GL.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, _Indices.Length, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);

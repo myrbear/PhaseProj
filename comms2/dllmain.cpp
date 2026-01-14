@@ -6,10 +6,13 @@
 
 using namespace std;
 
+#define MAX_VERTS 10
 
 struct MyStruct {
-	int a;
-	char b;
+	float x;
+	float y;
+	float s;
+	float r;
 };
 
 
@@ -29,7 +32,7 @@ void p_root(Node* root) {
 #define EXPORTED_METHOD extern "C" __declspec(dllexport)
 
 EXPORTED_METHOD
-int CppFunction(MyStruct* myStruct)
+int CppFunction(MyStruct* A, MyStruct* B)
 {
 	Collider col0;
 	Collider col1;
@@ -38,8 +41,11 @@ int CppFunction(MyStruct* myStruct)
 	init_col(&col1);
 
 	//col1._pos._x = 3;
-	col1._pos._y = myStruct->a;
-	col1._pos._x = 1.0;
+	col1._pos._y = A->y;
+	col1._pos._x = A->x;
+
+	col0._pos._y = B->y;
+	col0._pos._x = B->x;
 	//col1._pos._z = 0.5f;
 
 	p_col(col0);
@@ -49,7 +55,7 @@ int CppFunction(MyStruct* myStruct)
 
 	cout << "hi ... " << flag << endl;
 
-	return 0;
+	return flag;
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,

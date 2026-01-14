@@ -1,3 +1,2 @@
-﻿  dllmain.cpp
-C:\Users\mzlaf\Documents\proj\phase_proj\comms2\dllmain.cpp(41,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+﻿  collider.cpp
   comms2.vcxproj -> C:\Users\mzlaf\Documents\proj\phase_proj\comms\x64\Debug\comms2.dll

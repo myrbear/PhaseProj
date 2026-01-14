@@ -19,7 +19,7 @@ namespace PhaseProj {
             _Rb = new Rigidbody(this);
             _Transform = new Transform2D();
             //_Transform._Position = new OpenTK.Mathematics.Vector2(0.1f);
-            _Transform._Scale = new OpenTK.Mathematics.Vector2(0.5f);
+            _Transform._Scale = new OpenTK.Mathematics.Vector2(0.2f);
             _Transform.UpdateTransform();
         }
 

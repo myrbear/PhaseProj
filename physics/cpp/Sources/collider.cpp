@@ -35,11 +35,13 @@ void init_col(Collider* col) {
 	Vector dat1;
 	Vector dat2;
 	Vector dat3;
-	
-	init_vec(&dat0, -1, -1,  0);
-	init_vec(&dat1, -1,  1,  0);
-	init_vec(&dat2,  1, -1,  0);
-	init_vec(&dat3,  1,  1,  0);
+
+	float scale = 0.1f;
+
+	init_vec(&dat0, -scale, -scale,  0);
+	init_vec(&dat1, -scale, scale,  0);
+	init_vec(&dat2, scale, -scale,  0);
+	init_vec(&dat3, scale, scale,  0);
 
 	col->_verts = insert(col->_verts, dat0, 0);
 	col->_verts = insert(col->_verts, dat1, 1);
