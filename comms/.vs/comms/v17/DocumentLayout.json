@@ -6,25 +6,10 @@
       "AbsoluteMoniker": "D:0:0:{AACDF0CA-846E-1CB4-8970-8BBA0781D5F0}|..\\display\\PhaseProj.csproj|c:\\users\\mzlaf\\documents\\proj\\phase_proj\\display\\scripts\\gameengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AACDF0CA-846E-1CB4-8970-8BBA0781D5F0}|..\\display\\PhaseProj.csproj|c:\\users\\mzlaf\\documents\\proj\\phase_proj\\display\\content\\shaders\\quad.frag||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AACDF0CA-846E-1CB4-8970-8BBA0781D5F0}|..\\display\\PhaseProj.csproj|c:\\users\\mzlaf\\documents\\proj\\phase_proj\\display\\scripts\\gameobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AACDF0CA-846E-1CB4-8970-8BBA0781D5F0}|..\\display\\PhaseProj.csproj|c:\\users\\mzlaf\\documents\\proj\\phase_proj\\display\\scripts\\quad.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\physics\\cpp\\Sources\\collider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FAA96816-6288-4A22-A7D9-5EBE28620A38}|..\\comms2\\comms2.vcxproj|C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\dllmain.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AACDF0CA-846E-1CB4-8970-8BBA0781D5F0}|..\\display\\PhaseProj.csproj|c:\\users\\mzlaf\\documents\\proj\\phase_proj\\display\\content\\shaders\\quad.vert||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AACDF0CA-846E-1CB4-8970-8BBA0781D5F0}|..\\display\\PhaseProj.csproj|c:\\users\\mzlaf\\documents\\proj\\phase_proj\\display\\scripts\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +19,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 10,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -54,80 +39,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "collider.cpp",
               "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\physics\\cpp\\Sources\\collider.cpp",
               "RelativeDocumentMoniker": "..\\physics\\cpp\\Sources\\collider.cpp",
               "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\physics\\cpp\\Sources\\collider.cpp",
               "RelativeToolTip": "..\\physics\\cpp\\Sources\\collider.cpp",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACMAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAYwEAAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-14T18:15:11.958Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "quad.vert",
-              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Content\\Shaders\\quad.vert",
-              "RelativeDocumentMoniker": "..\\display\\Content\\Shaders\\quad.vert",
-              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Content\\Shaders\\quad.vert",
-              "RelativeToolTip": "..\\display\\Content\\Shaders\\quad.vert",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-01-14T18:10:27.516Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "quad.frag",
-              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Content\\Shaders\\quad.frag",
-              "RelativeDocumentMoniker": "..\\display\\Content\\Shaders\\quad.frag",
-              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Content\\Shaders\\quad.frag",
-              "RelativeToolTip": "..\\display\\Content\\Shaders\\quad.frag",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-01-14T18:10:24.824Z",
+              "WhenOpened": "2026-01-14T19:46:07.616Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "GameObject.cs",
-              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Scripts\\GameObject.cs",
-              "RelativeDocumentMoniker": "..\\display\\Scripts\\GameObject.cs",
-              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Scripts\\GameObject.cs",
-              "RelativeToolTip": "..\\display\\Scripts\\GameObject.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-14T17:51:58.763Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Quad.cs",
-              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Scripts\\Quad.cs",
-              "RelativeDocumentMoniker": "..\\display\\Scripts\\Quad.cs",
-              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Scripts\\Quad.cs",
-              "RelativeToolTip": "..\\display\\Scripts\\Quad.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAYwFMAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-14T17:58:23.624Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
               "Title": "dllmain.cpp",
               "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\dllmain.cpp",
               "RelativeDocumentMoniker": "..\\comms2\\dllmain.cpp",
               "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\comms2\\dllmain.cpp",
               "RelativeToolTip": "..\\comms2\\dllmain.cpp",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACcAAAAEAAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADIAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-14T17:55:41.816Z",
+              "WhenOpened": "2026-01-14T19:43:31.61Z",
               "EditorCaption": ""
             },
             {
@@ -138,22 +71,9 @@
               "RelativeDocumentMoniker": "..\\display\\Scripts\\GameEngine.cs",
               "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Scripts\\GameEngine.cs",
               "RelativeToolTip": "..\\display\\Scripts\\GameEngine.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAowHkAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAIkAAAAAAAAAAAAtwJ0AAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-14T17:51:59.086Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Scripts\\Program.cs",
-              "RelativeDocumentMoniker": "..\\display\\Scripts\\Program.cs",
-              "ToolTip": "C:\\Users\\mzlaf\\Documents\\proj\\phase_proj\\display\\Scripts\\Program.cs",
-              "RelativeToolTip": "..\\display\\Scripts\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAYwBIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-14T17:51:45.122Z",
               "EditorCaption": ""
             }
           ]

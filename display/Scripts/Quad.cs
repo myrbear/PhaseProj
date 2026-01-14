@@ -71,7 +71,10 @@ namespace PhaseProj {
             Console.WriteLine("Quad not disposed.");
         }
 
-        public Vector2[] GetVertsWorld() {
+        public Vector2[] GetVertsLocal() {
+
+            // factors scale, not position
+
             var verts = new Vector2[_Indices.Length];
 
             for (int i = 0; i < _Indices.Length; i++) {
@@ -80,7 +83,7 @@ namespace PhaseProj {
                 float y = _Vertices[index + 1];
                 float z = _Vertices[index + 2];
 
-                verts[i] = new Vector2(x, y) * _Parent.GetTransform()._Scale + _Parent.GetTransform()._Position;
+                verts[i] = new Vector2(x, y) * _Parent.GetTransform()._Scale;
             }
 
             return verts;

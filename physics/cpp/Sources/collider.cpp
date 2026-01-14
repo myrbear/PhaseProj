@@ -19,7 +19,7 @@ using namespace std;
 
 int simplex_idx = 0;
 
-void init_col(Collider* col) {
+void init_col(Collider* col, float x0, float x1, float x2, float y0, float y1, float y2, float xp, float yp) {
 
 	// initialize a collider
 	// colliders have position, rotation, scale, and vertices
@@ -29,24 +29,29 @@ void init_col(Collider* col) {
 	// give it 4 vertices because we're in 2D space.
 	// the result is a square centered at the origin where each side is 2 units
 	
-	init_vec(&col->_pos,  0,  0,  0);
+	init_vec(&col->_pos,  xp,  yp,  0);
 	
-	Vector dat0;
-	Vector dat1;
-	Vector dat2;
-	Vector dat3;
+	/*for (int i = 0; i < len; i++)
+	{
+		Vector v;
+		init_vec(&v, xs[i], ys[i], 0);
+		col->_verts = insert(col->_verts, v, i);
+	}*/
 
-	float scale = 0.1f;
+	Vector v0;
+	Vector v1;
+	Vector v2;
 
-	init_vec(&dat0, -scale, -scale,  0);
-	init_vec(&dat1, -scale, scale,  0);
-	init_vec(&dat2, scale, -scale,  0);
-	init_vec(&dat3, scale, scale,  0);
+	init_vec(&v0, x0, y0, 0);
+	init_vec(&v1, x1, y1, 0);
+	init_vec(&v2, x2, y2, 0);
 
-	col->_verts = insert(col->_verts, dat0, 0);
-	col->_verts = insert(col->_verts, dat1, 1);
-       	col->_verts = insert(col->_verts, dat2, 2);
-	col->_verts = insert(col->_verts, dat3, 3);
+	col->_verts = insert(col->_verts, v0, 0);
+	col->_verts = insert(col->_verts, v1, 1);
+	col->_verts = insert(col->_verts, v2, 2);
+
+	//col->_pos._x = xp;
+	//col->_pos._y = yp;
 }
 
 void p_col(Collider col) {
@@ -56,6 +61,9 @@ void p_col(Collider col) {
 
 	Node* temp = col._verts;
 	
+	p_vec(col._pos);
+	cout << endl;
+
 	while (temp) {
 
 		Vector v = temp->dat;

@@ -9,10 +9,18 @@ using namespace std;
 #define MAX_VERTS 10
 
 struct MyStruct {
-	float x;
-	float y;
-	float s;
-	float r;
+	//float xs[MAX_VERTS];
+	//float ys[MAX_VERTS];
+	 float x0;
+	 float x1;
+	 float x2;
+
+	 float y0;
+	 float y1;
+	 float y2;
+
+	  float xp;
+	  float yp;
 };
 
 
@@ -37,16 +45,8 @@ int CppFunction(MyStruct* A, MyStruct* B)
 	Collider col0;
 	Collider col1;
 
-	init_col(&col0);
-	init_col(&col1);
-
-	//col1._pos._x = 3;
-	col1._pos._y = A->y;
-	col1._pos._x = A->x;
-
-	col0._pos._y = B->y;
-	col0._pos._x = B->x;
-	//col1._pos._z = 0.5f;
+	init_col(&col0, A->x0, A->x1, A->x2, A->y0, A->y1, A->y2, A->xp, A->yp);
+	init_col(&col1, B->x0, B->x1, B->x2, B->y0, B->y1, B->y2, B->xp, B->yp);
 
 	p_col(col0);
 	p_col(col1);

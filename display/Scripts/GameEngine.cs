@@ -20,10 +20,16 @@ namespace PhaseProj {
 
         [StructLayout(LayoutKind.Sequential)]
         public class MyStruct {
-            public float x;
-            public float y;
-            public float s;
-            public float r;
+            public float x0;
+            public float x1;
+            public float x2;
+
+            public float y0;
+            public float y1;
+            public float y2;
+
+            public float xp;
+            public float yp;
         }
         private const string dllPath = @"C:\Users\mzlaf\Documents\proj\phase_proj\comms\x64\Debug\comms2.dll";
 
@@ -53,7 +59,7 @@ namespace PhaseProj {
             _GOs[1] = new GameObject();
 
             _GOs[0].GetTransform()._Position = new Vector2(0.2f, 0.2f);
-            _GOs[1].GetTransform()._Position = new Vector2(-0.3f, -0f);
+            _GOs[1].GetTransform()._Position = new Vector2(-0.45f, -0f);
 
             //ground._Transform._Position = new Vector2(0, 0.1f);
 
@@ -106,16 +112,50 @@ namespace PhaseProj {
 
                 if (go != null && go1 != null) {
                     MyStruct A = new MyStruct();
-                    A.x = go.GetTransform()._Position.X;
-                    A.y = go.GetTransform()._Position.Y;
-                    A.s = go.GetTransform()._Scale.X; // only using x for now to represent one scale
+                    var verts0 = go.GetQuad().GetVertsLocal();
+
+                    A.x0 = verts0[0].X;
+                    A.x1 = verts0[1].X;
+                    A.x2 = verts0[2].X;
+
+                    A.y0 = verts0[0].Y;
+                    A.y1 = verts0[1].Y;
+                    A.y2 = verts0[2].Y;
+
+                    A.xp = go.GetTransform()._Position.X;
+                    A.yp = go.GetTransform()._Position.Y;
+
+                    //A.len = verts0.Length;
+                    //A.ys = new float[A.len];
+
+                    //for (int j = 0; j < verts0.Length; j++) {
+                    //    A.xs[j] = verts0[j].X;
+                    //    A.ys[j] = verts0[j].Y;
+                    //}
 
                     MyStruct B = new MyStruct();
-                    B.x = go1.GetTransform()._Position.X;
-                    B.y = go1.GetTransform()._Position.Y;
-                    B.s = go1.GetTransform()._Scale.X;
+                    var verts1 = go1.GetQuad().GetVertsLocal();
 
-                        int valueFromCpp = CppFunction(A, B);
+                    //B.len = verts1.Length;
+                    //B.xs = new float[B.len];
+                    //B.ys = new float[B.len];
+
+                    //for (int j = 0; j < verts1.Length; j++) {
+                    //    B.xs[j] = verts1[j].X;
+                    //    B.ys[j] = verts1[j].Y;
+                    //}
+                    B.x0 = verts1[0].X;
+                    B.x1 = verts1[1].X;
+                    B.x2 = verts1[2].X;
+
+                    B.y0 = verts1[0].Y;
+                    B.y1 = verts1[1].Y;
+                    B.y2 = verts1[2].Y;
+
+                    B.xp = go1.GetTransform()._Position.X;
+                    B.yp = go1.GetTransform()._Position.Y;
+
+                    int valueFromCpp = CppFunction(A, B);
 
                         if (valueFromCpp == 1) {
                             go.GetQuad()._Color = new Vector3(0.5f, 0.5f, 0.5f);
