@@ -50,6 +50,7 @@ namespace PhaseProj {
             CursorState = CursorState.Normal;
             WindowBorder = WindowBorder.Fixed;
             WindowState = WindowState.Normal;
+            CenterWindow(new Vector2i(512, 512));
 
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Less);
@@ -58,10 +59,10 @@ namespace PhaseProj {
             _GOs[0] = new GameObject();
             _GOs[1] = new GameObject();
 
-            _GOs[0].GetTransform()._Position = new Vector2(0.2f, 0.2f);
-            _GOs[1].GetTransform()._Position = new Vector2(-0.45f, -0f);
-
-            //ground._Transform._Position = new Vector2(0, 0.1f);
+            _GOs[0].GetTransform()._Position = new Vector2(0f, 0.2f);
+            _GOs[1].GetTransform()._Position = new Vector2(-0.45f, -0.1f);
+            
+           
 
             _Instance = this;
         }
@@ -111,6 +112,7 @@ namespace PhaseProj {
                 }
 
                 if (go != null && go1 != null) {
+
                     MyStruct A = new MyStruct();
                     var verts0 = go.GetQuad().GetVertsLocal();
 
@@ -157,13 +159,14 @@ namespace PhaseProj {
 
                     int valueFromCpp = CppFunction(A, B);
 
-                        if (valueFromCpp == 1) {
-                            go.GetQuad()._Color = new Vector3(0.5f, 0.5f, 0.5f);
-                        }
-                        else {
-                            go.GetQuad()._Color = new Vector3(1f, 1f, 1f);
-                        }
+                    if (valueFromCpp == 1) {
+                        go.GetQuad()._Color = new Vector3(0.5f, 0.5f, 0.5f);
+                    }
+                    else {
+                        go.GetQuad()._Color = new Vector3(1f, 1f, 1f);
+                    }
 
+                    //ground._Transform._Position = new Vector2(0, 0.1f);
                 }
 
                 if (go != null) {

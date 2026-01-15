@@ -67,9 +67,9 @@ void p_col(Collider col) {
 	while (temp) {
 
 		Vector v = temp->dat;
-                Vector sum = add_vec(col._pos, v);
-
-                p_vec(sum);
+        Vector sum = add_vec(col._pos, v);
+		cout << "v"; p_vec(v);
+		cout << "sum";  p_vec(sum);
 		
 		temp = temp->next;
 	}
