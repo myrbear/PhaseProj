@@ -5,7 +5,7 @@ using namespace std;
 int main()
 {
     
-    InitWindow(screen_width, screen_height, "Game");
+    InitWindow(screen_width, screen_height, "PHASE Editor");
 
     SetTargetFPS(60);
     //--------------------------------------------------------------------------------------
@@ -45,10 +45,14 @@ int main()
 
             Color color;
             switch (obj->color) {
-                case 0: color = RED;
-                case 1: color = GREEN;
-                case 2: color = YELLOW;
-                default: color = WHITE;
+                case 0: color = RED; 
+                    break;
+                case 1: color = ORANGE; 
+                    break;
+                case 2: color = BLUE; 
+                    break;
+                default: color = WHITE; 
+                    break;
             };
 
             DrawRectanglePro(rect, origin, obj->rotation, color);

@@ -228,20 +228,6 @@ void PhaseEngine::CollisionResolution() {
                     float mass_factor = obja->inv_mass / (obja->inv_mass + objb->inv_mass);
                     obja->position = obja->position - (info.contact_normal * mass_factor * info.penetration_depth);
                     objb->position = objb->position + (info.contact_normal * (1 - mass_factor) * info.penetration_depth);
-
-                    // Debug
-                    // cout << "Collision" << endl;
-                    // cout << "Velocity a = " << obja->velocity.y << endl;
-                    // cout << "Velocity b = " << objb->velocity.y << endl;
-                    // cout << "Relative velocity = " << objb->velocity.y - obja->velocity.y << endl;
-                    // cout << "v_n = " << v_n << endl;
-                    // cout << "|n| = " << info.contact_normal.x * info.contact_normal.x + info.contact_normal.y*info.contact_normal.y << endl;
-                    // cout << "invmass a = " << obja->inv_mass << endl;
-                    // cout << "invmass b = " << objb->inv_mass << endl;
-                    // cout << "j = " << j << endl;
-                    // cout << "Collision" << endl;
-                    obja->pos = info.contact_point;
-
                 }
             }
 

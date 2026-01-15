@@ -15,6 +15,7 @@ namespace Sidebar {
         bool is_static;
         Color color;
         string label;
+        int color_id;
     };
 
     static vector<PaletteItem> items;
@@ -24,6 +25,7 @@ namespace Sidebar {
     static float dragSide = 32;
     static bool dragIsStatic = false;
     static Color dragColor = GRAY;
+    static int drag_color_id = 0;
 
     void Init() {
         sidebarRect = { 0.0f, 0.0f, (float)sidebarWidth, (float)GetScreenHeight() };
@@ -39,6 +41,7 @@ namespace Sidebar {
         p1.color = RED;
         p1.label = "Dynamic 32";
         p1.rect = { 20.0f, y, p1.side, p1.side };
+        p1.color_id = 0;
         items.push_back(p1);
         y += p1.side + pad;
 
@@ -49,6 +52,7 @@ namespace Sidebar {
         p2.color = ORANGE;
         p2.label = "Dynamic 64";
         p2.rect = { 20.0f, y, p2.side, p2.side };
+        p2.color_id = 1;
         items.push_back(p2);
         y += p2.side + pad;
 
@@ -59,6 +63,7 @@ namespace Sidebar {
         p3.color = BLUE;
         p3.label = "Static 48";
         p3.rect = { 20.0f, y, p3.side, p3.side };
+        p3.color_id = 2;
         items.push_back(p3);
     }
 
@@ -73,6 +78,7 @@ namespace Sidebar {
                     dragSide = it.side;
                     dragIsStatic = it.is_static;
                     dragColor = it.color;
+                    drag_color_id = it.color_id;
                     break;
                 }
             }
@@ -83,10 +89,10 @@ namespace Sidebar {
             if (mpos.x > sidebarWidth) {
                 int id;
                 if (dragIsStatic) {
-                    id = engine->CreateStaticObject(dragSide, 0);
+                    id = engine->CreateStaticObject(dragSide, drag_color_id);
                 }
                 else {
-                    id = engine->CreateObject(dragSide, 1.0f, 0);
+                    id = engine->CreateObject(dragSide, 1.0f, drag_color_id);
                 }
 
                 if (id != -1) {

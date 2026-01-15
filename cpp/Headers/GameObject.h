@@ -61,7 +61,7 @@ Vector TransformPoint(Vector p, RotationMatrix r);
 class GameObject
 {
     public:
-        GameObject(int id, float _s, float _mass, bool _is_static, int color);
+        GameObject(int id, float _s, float _mass, bool _is_static, int _color);
 
         int GetId();
         float GetSide();
@@ -82,9 +82,6 @@ class GameObject
         float inv_mass;
         float inertia;
         float inv_inertia;
-
-        Vector dir = {0, 0};
-        Vector pos = {0, 0};
 
         int color;
         

@@ -13,80 +13,6 @@ Vector TransformPoint(Vector p, RotationMatrix r) {
     };
     return pt;
 }
-// bool ProjectOntoSegment(Vector p, Vector d, Vector a, Vector b, Vector* out) {
-//     if(d.x == 0 && a.x == b.x) {
-//         // Direction and segment are vertical
-//         out = NULL;
-//         return false;
-//     }
-
-//     if(d.x == 0) {
-//         // Direction is vertical
-//         if(
-//             p.x > a.x && p.x > b.x ||
-//             p.x < a.x && p.x < b.x ) {
-//             // Point not on segment
-//             out = NULL;
-//             return false;
-//         }
-//         float m = (b.y - a.y) / (b.x - a.x);
-//         Vector c = {
-//             p.x,
-//             m * (p.x - a.x) + a.y
-//         };
-        
-//         *out = c;
-//         return true;
-//     }
-
-//     if(a.x == b.x) {
-//         // Segment is vertical
-//         float m = d.y/d.x;
-//         Vector c = {
-//             a.x,
-//             m * (a.x - p.x) + p.y
-//         };
-//         if(
-//             c.y > a.y && c.y > b.y ||
-//             c.y < a.y && c.y < b.y ) {
-//             // Point not on segment
-//             out = NULL;
-//             return false;
-//         }
-        
-//         *out = c;
-//         return true;
-//     }
-
-//     float m1 = d.y / d.x;
-//     float m2 = (b.y - a.y) / (b.x - a.x);
-
-//     if(m1 == m2) {
-//         // Slopes nonvertical and equal
-//         out = NULL;
-//         return false;
-//     }
-
-//     // Slopes nonvertical and unequal
-//     float b1 = p.y - (m1 * p.x);
-//     float b2 = a.y - (m2 * a.x);
-//     Vector c = {
-//         (b2 - b1) / (m1 - m2),
-//         m1 * ((b2 - b1) / (m1 - m2)) + b1
-//     };
-
-//     if(
-//         c.x > a.x && c.x > b.x ||
-//         c.x < a.x && c.x < b.x) {
-//         // Point not on segment
-//         out = NULL;
-//         return false;
-//     }
-
-//     *out = c;
-//     return true;
-// }
-
 
 
 GameObject::GameObject(int _id, float _s, float _mass, bool _is_static, int _color) : id(_id), side(_s), is_static(_is_static), mass(_mass), color(_color) {
@@ -116,28 +42,7 @@ bool GameObject::PointCollision(Vector p) {
     RotationMatrix r = GetReverseRotationMatrix();
     Vector point_t = TransformPoint(p, r);
     Vector position_t = TransformPoint(position, r);
-
-    bool col = (
-        point_t.x >= position_t.x - side/2 &&
-        point_t.x <= position_t.x + side/2 &&
-        point_t.y >= position_t.y - side/2 &&
-        point_t.y <= position_t.y + side/2
-    );
-
-    // if(id == 0) {
-    //     std::cout <<"-------------------------" << std::endl;
-    //     if(col) {
-    //         std::cout << "Collision" << std::endl;
-    //         std::cout << "Point ("<<p.x<<","<<p.y<<") is in box x=(" << position.x - side/2 << "->" << position.x + side/2 <<
-    //         ") y=(" << position.y - side/2 << "->" << position.y + side/2 << ")" << std::endl;
-    //     }
-    //     else {
-    //         std::cout << "No Collision" << std::endl;
-    //         std::cout << "Point ("<<p.x<<","<<p.y<<") is not in box x=(" << position.x - side/2 << "->" << position.x + side/2 <<
-    //         ") y=(" << position.y - side/2 << "->" << position.y + side/2 << ")" << std::endl;
-    //     }
-    // }
-
+    
     return (
         point_t.x >= position_t.x - side/2 &&
         point_t.x <= position_t.x + side/2 &&
