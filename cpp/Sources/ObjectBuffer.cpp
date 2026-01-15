@@ -7,7 +7,7 @@ ObjectBuffer::ObjectBuffer() {
 }
 
 
-int ObjectBuffer::CreateObject(float side, float mass) {
+int ObjectBuffer::CreateObject(float side, float mass, int color) {
     if(buffer_index == OBJECT_BUFFER_SIZE) {
         // Object buffer full, return invalid Id
         return -1;
@@ -17,7 +17,7 @@ int ObjectBuffer::CreateObject(float side, float mass) {
         int new_id = buffer_index;
 
         // Enqueue update
-        ObjectChangeNode* node = new ObjectChangeNode(OBJECT_CREATE, new_id, side, mass, 0);
+        ObjectChangeNode* node = new ObjectChangeNode(OBJECT_CREATE, new_id, side, mass, 0, color);
         Enqueue(node);
 
         // Increment index
@@ -32,7 +32,7 @@ int ObjectBuffer::CreateObject(float side, float mass) {
 }
 
 
-int ObjectBuffer::CreateStaticObject(float side) {
+int ObjectBuffer::CreateStaticObject(float side, int color) {
     if(buffer_index == OBJECT_BUFFER_SIZE) {
         // Object buffer full, return invalid Id
         return -1;
@@ -42,7 +42,7 @@ int ObjectBuffer::CreateStaticObject(float side) {
         int new_id = buffer_index;
 
         // Enqueue update
-        ObjectChangeNode* node = new ObjectChangeNode(OBJECT_CREATE, new_id, side, 0, 1);
+        ObjectChangeNode* node = new ObjectChangeNode(OBJECT_CREATE, new_id, side, 0, 1, color);
         Enqueue(node);
 
         // Increment index
@@ -78,14 +78,14 @@ GameObject ObjectBuffer::GetGameObject(int id) {
     // Validate Id
     if(id < 0 || id >= OBJECT_BUFFER_SIZE) {
         cout << "ERROR: Invalid Object Id" << endl;
-        return GameObject(-1, 0, 0, false);
+        return GameObject(-1, 0, 0, false, 0);
     }
 
     // Retrieve object
     GameObject* ptr = read_buffer_ptr[id];
     if(ptr == NULL) {
         cout << "ERROR: Invalid Object Id" << endl;
-        return GameObject(-1, 0, 0, false);
+        return GameObject(-1, 0, 0, false, 0);
     }
     else {
         return *ptr;
@@ -170,8 +170,8 @@ void ObjectBuffer::ApplyChanges() {
         if(node->change_type == OBJECT_CREATE) {
             // Allocate memory for two objects
             bool is_static = (node->val3 == 1);
-            GameObject* read_obj = new GameObject(node->id, node->val1, node->val2, is_static);
-            GameObject* write_obj = new GameObject(node->id, node->val1, node->val2, is_static);
+            GameObject* read_obj = new GameObject(node->id, node->val1, node->val2, is_static, node->col);
+            GameObject* write_obj = new GameObject(node->id, node->val1, node->val2, is_static, node->col);
 
             // Insert object pointer
             read_buffer_ptr[node->id] = read_obj;

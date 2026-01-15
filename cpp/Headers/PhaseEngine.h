@@ -29,8 +29,8 @@ class PhaseEngine {
         PhaseEngine();
         void Run();
         void Stop();
-        int CreateObject(float side, float mass);
-        int CreateStaticObject(float side);
+        int CreateObject(float side, float mass, int color);
+        int CreateStaticObject(float side, int color);
         void DeleteObject(int id);
         // Object read functions
         // For external use (ALEX)
@@ -54,9 +54,7 @@ class PhaseEngine {
         // Physics stages
         void AccumulateForces(float deltaTime);
         void IntegrateVelocities(float deltaTime);
-        void CollisionDetection();
         void CollisionResolution();
-        void PositionCorrection();
 
         // For physics calculations (MYRON)
         ObjectBuffer::ObjectIterator BeginPhysIt();

@@ -3,6 +3,8 @@
 
 #include "raylib.h"
 #include "PhaseEngine.h"
+#include "../Headers/Sidebar.h"
+#include <iostream>
 
 // Screen Constants
 const int screen_width = 1600;

@@ -100,8 +100,8 @@ class ObjectBuffer {
         ObjectIterator write_end() { return ObjectIterator(this, OBJECT_BUFFER_SIZE, WRITE, &mtx); }
 
         // Functions
-        int CreateObject(float side, float mass);
-        int CreateStaticObject(float side);
+        int CreateObject(float side, float mass, int color);
+        int CreateStaticObject(float side, int color);
         void DeleteObject(int id);
         GameObject GetGameObject(int id);
         void SetPosition(int id, float x, float y);
@@ -129,12 +129,13 @@ class ObjectBuffer {
         // Only apply changes to GameObjects outside of physics calculations
         struct ObjectChangeNode {
             public:
-                ObjectChangeNode(int _ct, int _id, float _v1=0, float _v2 = 0, float _v3=0) : change_type(_ct), id(_id), val1(_v1), val2(_v2), val3(_v3) {}
+                ObjectChangeNode(int _ct, int _id, float _v1=0, float _v2 = 0, float _v3=0, int _col=0) : change_type(_ct), id(_id), val1(_v1), val2(_v2), val3(_v3), col(_col) {}
                 int change_type;
                 int id;
                 float val1;
                 float val2;
                 float val3;
+                int col;
                 ObjectChangeNode* next = NULL;
         };
         ObjectChangeNode* head = NULL;

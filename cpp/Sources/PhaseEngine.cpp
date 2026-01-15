@@ -89,16 +89,16 @@ void PhaseEngine::RunPhysicsThread() {
 }
 
 
-int PhaseEngine::CreateObject(float side, float mass) {
-    int id = object_buffer.CreateObject(side, mass);
+int PhaseEngine::CreateObject(float side, float mass, int color) {
+    int id = object_buffer.CreateObject(side, mass, color);
     if(id == -1) {
         cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
     }
     return id;
 }
 
-int PhaseEngine::CreateStaticObject(float side) {
-    int id = object_buffer.CreateStaticObject(side);
+int PhaseEngine::CreateStaticObject(float side, int color) {
+    int id = object_buffer.CreateStaticObject(side, color);
     if(id == -1) {
         cout << "ERROR: Object limit reached, cannot create another object." << std::endl;
     }
@@ -155,9 +155,7 @@ ObjectBuffer::ObjectIterator PhaseEngine::EndPhysIt() {
 void PhaseEngine::SimulatePhysics(float deltaTime) {
     AccumulateForces(deltaTime);
     IntegrateVelocities(deltaTime);
-    CollisionDetection();
     CollisionResolution();
-    PositionCorrection();
 }
 
 
@@ -167,7 +165,7 @@ void PhaseEngine::AccumulateForces(float deltaTime) {
         
         if(!obj->IsStatic()) {
             // Gravity
-            obj->velocity.y += deltaTime / 100;
+            obj->velocity.y += deltaTime / 20;
         }
     }
 }
@@ -186,7 +184,7 @@ void PhaseEngine::IntegrateVelocities(float deltaTime) {
 }
 
 
-void PhaseEngine::CollisionDetection() {
+void PhaseEngine::CollisionResolution() {
     for(auto ita = BeginPhysIt(); ita != EndPhysIt(); ita++) {
         auto itb = ita;
         itb++;
@@ -195,23 +193,60 @@ void PhaseEngine::CollisionDetection() {
             GameObject* obja = *ita;
             GameObject* objb = *itb;
 
-            if(Collide(obja, objb)) {
-                obja->velocity = {0, 0};
-                objb->velocity = {0, 0};
+            // Static objects don't collide with each other
+            if(obja->IsStatic() && objb->IsStatic()) {
+                itb++;
+                continue;
+            }
+
+            CollisionInfo info;
+
+            if(Collide(obja, objb, &info)) {
+                // Relative velocity
+                Vector v_rel = objb->velocity - obja->velocity;
+                float v_n = Dot(v_rel, info.contact_normal);
+                if(v_n <= 0) {
+                    // Bodies colliding, impulse needed
+                    Vector ra = info.contact_point - obja->position;
+                    Vector rb = info.contact_point - objb->position;
+                    float ra_n = Cross(ra, info.contact_normal);
+                    float rb_n = Cross(rb, info.contact_normal);
+                    float k = obja->inv_mass + objb->inv_mass + (ra_n*ra_n) * obja->inv_inertia + (rb_n*rb_n) * objb->inv_inertia;  // Effective mass
+                    float e = 0.2;
+                    float j = -(1 + e) * v_n / k; // Impulse magnitude
+                    Vector J = info.contact_normal * j;
+
+                    // Linear impulse
+                    obja->velocity = obja->velocity - (J * obja->inv_mass);
+                    objb->velocity = objb->velocity + (J * objb->inv_mass);
+
+                    // Angular impulse
+                    obja->angular_velocity = obja->angular_velocity - (Cross(ra, J) * obja->inv_inertia);
+                    objb->angular_velocity = objb->angular_velocity + (Cross(rb, J) * objb->inv_inertia);
+
+                    // Position correction
+                    float mass_factor = obja->inv_mass / (obja->inv_mass + objb->inv_mass);
+                    obja->position = obja->position - (info.contact_normal * mass_factor * info.penetration_depth);
+                    objb->position = objb->position + (info.contact_normal * (1 - mass_factor) * info.penetration_depth);
+
+                    // Debug
+                    // cout << "Collision" << endl;
+                    // cout << "Velocity a = " << obja->velocity.y << endl;
+                    // cout << "Velocity b = " << objb->velocity.y << endl;
+                    // cout << "Relative velocity = " << objb->velocity.y - obja->velocity.y << endl;
+                    // cout << "v_n = " << v_n << endl;
+                    // cout << "|n| = " << info.contact_normal.x * info.contact_normal.x + info.contact_normal.y*info.contact_normal.y << endl;
+                    // cout << "invmass a = " << obja->inv_mass << endl;
+                    // cout << "invmass b = " << objb->inv_mass << endl;
+                    // cout << "j = " << j << endl;
+                    // cout << "Collision" << endl;
+                    obja->pos = info.contact_point;
+
+                }
             }
 
             itb++;
         }
     }
-}
-
-
-void PhaseEngine::CollisionResolution() {
-
-}
-
-
-void PhaseEngine::PositionCorrection() {
-
 }
 
