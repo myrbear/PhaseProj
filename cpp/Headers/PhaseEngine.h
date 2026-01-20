@@ -27,6 +27,8 @@ using namespace std;
 class PhaseEngine {
     public:
         PhaseEngine();
+        void SetGravity(float g); // pixels/sec^2
+        void SetFriction(float f); // damping coefficient
         void Run();
         void Stop();
         int CreateObject(float side, float mass, int color);
@@ -49,6 +51,9 @@ class PhaseEngine {
         bool IsRunning();
 
     private:
+        // physics parameters (configurable)
+        float gravity; // pixels per second^2
+        float friction; // damping coefficient per second
         // Main phyisics loop
         void SimulatePhysics(float deltaTime);
         // Physics stages

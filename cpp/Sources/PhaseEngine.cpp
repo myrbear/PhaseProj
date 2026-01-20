@@ -2,6 +2,9 @@
 
 PhaseEngine::PhaseEngine() {
     engine_running.store(false);
+    // sensible defaults
+    gravity = 9.8f * 100.0f; // scale to pixels/sec^2
+    friction = 0.5f; // arbitrary damping
 }
 
 // Call to start engine
@@ -15,6 +18,14 @@ void PhaseEngine::Run() {
         physics_thread = thread(&PhaseEngine::RunPhysicsThread, this);
         cout << "PHASE Engine Running" << endl;
     }
+}
+
+void PhaseEngine::SetGravity(float g) {
+    gravity = g;
+}
+
+void PhaseEngine::SetFriction(float f) {
+    friction = f;
 }
 
 
@@ -164,8 +175,13 @@ void PhaseEngine::AccumulateForces(float deltaTime) {
         GameObject* obj = *it;
         
         if(!obj->IsStatic()) {
-            // Gravity
-            obj->velocity.y += deltaTime / 20;
+                // Gravity (scaled by engine gravity)
+                obj->velocity.y += gravity * deltaTime;
+                // simple damping
+                float damp = 1.0f - friction * deltaTime;
+                if(damp < 0.0f) damp = 0.0f;
+                obj->velocity.x *= damp;
+                obj->velocity.y *= damp;
         }
     }
 }
