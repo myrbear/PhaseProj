@@ -1,6 +1,7 @@
 #ifndef CONTROLPANEL_H
 #define CONTROLPANEL_H
 
+#include "raylib.h"
 #include "PhaseEngine.h"
 
 namespace ControlPanel {

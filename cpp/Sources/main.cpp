@@ -14,6 +14,7 @@ int main()
 
     // Initialize sidebar
     Sidebar::Init();
+    ControlPanel::Init();
 
     engine.Run();
 
@@ -32,6 +33,7 @@ int main()
 
         // Update sidebar input (handles drag/drop and object creation)
         Sidebar::Update(&engine);
+        ControlPanel::Update(&engine);
 
         for(auto it = engine.BeginObjIt(); it != engine.EndObjIt(); it++)
         {
@@ -64,6 +66,7 @@ int main()
 
         // Draw sidebar on top of scene
         Sidebar::Draw();
+        ControlPanel::Draw();
 
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -77,6 +80,7 @@ int main()
     engine.Stop();
 
     Sidebar::Shutdown();
+    ControlPanel::Shutdown();
 
     cout << "Program Successfully Executed" << endl;
 

@@ -6,7 +6,8 @@ LDFLAGS = -lwinmm -pthread -lraylib -lopengl32 -lgdi32
 PHASE_SRC = PhaseEngine.cpp \
 		GameObject.cpp \
 		ObjectBuffer.cpp \
-		Sidebar.cpp
+		Sidebar.cpp \
+		ControlPanel.cpp
 
 # Automatically generate PHASE object files
 PHASE_OBJ = $(PHASE_SRC:%.cpp=%.o)

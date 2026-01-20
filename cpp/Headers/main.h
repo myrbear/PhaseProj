@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "PhaseEngine.h"
 #include "../Headers/Sidebar.h"
+#include "../Headers/ControlPanel.h"
 #include <iostream>
 
 // Screen Constants
