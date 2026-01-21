@@ -36,6 +36,9 @@ struct Vector {
         Vector product = {x*c, y*c};
         return product;
     }
+    float Len() {
+        return sqrt(x*x + y*y);
+    }
 };
 
 float Cross(Vector v1, Vector v2);

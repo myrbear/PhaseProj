@@ -201,53 +201,99 @@ void PhaseEngine::IntegrateVelocities(float deltaTime) {
 
 
 void PhaseEngine::CollisionResolution() {
-    for(auto ita = BeginPhysIt(); ita != EndPhysIt(); ita++) {
-        auto itb = ita;
-        itb++;
-        while(itb != EndPhysIt()) {
-            // Test for collisions
-            GameObject* obja = *ita;
-            GameObject* objb = *itb;
+    bool collisions_occured = true;
+    for(int iterations = 0; iterations < MAX_ITERATIONS && collisions_occured; iterations++) {
+        bool collisions_occured = false;
 
-            // Static objects don't collide with each other
-            if(obja->IsStatic() && objb->IsStatic()) {
-                itb++;
-                continue;
-            }
-
-            CollisionInfo info;
-
-            if(Collide(obja, objb, &info)) {
-                // Relative velocity
-                Vector v_rel = objb->velocity - obja->velocity;
-                float v_n = Dot(v_rel, info.contact_normal);
-                if(v_n <= 0) {
-                    // Bodies colliding, impulse needed
-                    Vector ra = info.contact_point - obja->position;
-                    Vector rb = info.contact_point - objb->position;
-                    float ra_n = Cross(ra, info.contact_normal);
-                    float rb_n = Cross(rb, info.contact_normal);
-                    float k = obja->inv_mass + objb->inv_mass + (ra_n*ra_n) * obja->inv_inertia + (rb_n*rb_n) * objb->inv_inertia;  // Effective mass
-                    float e = 0.2;
-                    float j = -(1 + e) * v_n / k; // Impulse magnitude
-                    Vector J = info.contact_normal * j;
-
-                    // Linear impulse
-                    obja->velocity = obja->velocity - (J * obja->inv_mass);
-                    objb->velocity = objb->velocity + (J * objb->inv_mass);
-
-                    // Angular impulse
-                    obja->angular_velocity = obja->angular_velocity - (Cross(ra, J) * obja->inv_inertia);
-                    objb->angular_velocity = objb->angular_velocity + (Cross(rb, J) * objb->inv_inertia);
-
-                    // Position correction
-                    float mass_factor = obja->inv_mass / (obja->inv_mass + objb->inv_mass);
-                    obja->position = obja->position - (info.contact_normal * mass_factor * info.penetration_depth);
-                    objb->position = objb->position + (info.contact_normal * (1 - mass_factor) * info.penetration_depth);
-                }
-            }
-
+        for(auto ita = BeginPhysIt(); ita != EndPhysIt(); ita++) {
+            auto itb = ita;
             itb++;
+            while(itb != EndPhysIt()) {
+                // Test for collisions
+                GameObject* obja = *ita;
+                GameObject* objb = *itb;
+
+                // Static objects don't collide with each other
+                if(obja->IsStatic() && objb->IsStatic()) {
+                    itb++;
+                    continue;
+                }
+
+                CollisionInfo info;
+
+                if(Collide(obja, objb, &info)) {
+                    bool collisions_occured = true;
+                    // Relative velocity
+                    Vector v_rel = objb->velocity - obja->velocity;
+                    float v_n = Dot(v_rel, info.contact_normal);
+                    if(v_n <= 0) {
+                        // Position correction
+                        float mass_factor = obja->inv_mass / (obja->inv_mass + objb->inv_mass);
+                        obja->position = obja->position - (info.contact_normal * mass_factor * info.penetration_depth);
+                        objb->position = objb->position + (info.contact_normal * (1 - mass_factor) * info.penetration_depth);
+
+                        // Bodies colliding, impulse needed
+                        Vector ra = info.contact_point - obja->position;
+                        Vector rb = info.contact_point - objb->position;
+                        float ra_n = Cross(ra, info.contact_normal);
+                        float rb_n = Cross(rb, info.contact_normal);
+                        float k = obja->inv_mass + objb->inv_mass + (ra_n*ra_n) * obja->inv_inertia + (rb_n*rb_n) * objb->inv_inertia;  // Effective mass
+                        float e = 0.2;
+                        float j = -(1 + e) * v_n / k; // Impulse magnitude
+                        Vector J = info.contact_normal * j;
+
+                        // Linear impulse
+                        obja->velocity = obja->velocity - (J * obja->inv_mass);
+                        objb->velocity = objb->velocity + (J * objb->inv_mass);
+
+                        // Angular impulse
+                        obja->angular_velocity = obja->angular_velocity - (Cross(ra, J) * obja->inv_inertia);
+                        objb->angular_velocity = objb->angular_velocity + (Cross(rb, J) * objb->inv_inertia);
+
+                        // Friction
+                        Vector ang_va_c = {-obja->rotation * ra.y, obja->rotation * ra.x};
+                        Vector va_c = obja->velocity + ang_va_c;
+                        Vector ang_vb_c = {-obja->rotation * rb.y, obja->rotation * rb.x};
+                        Vector vb_c = objb->velocity + ang_vb_c;
+                        Vector v_rel = vb_c - va_c;
+
+                        // Remove normal component
+                        Vector t = v_rel - (info.contact_normal * Dot(v_rel, info.contact_normal));
+                        float t_len = t.Len();
+
+                        if(t_len > 0.000001f) {
+                            t = t/t_len;
+
+                            float rt_a = Cross(ra, t);
+                            float rt_b = Cross(rb, t);
+
+                            // Effective tangential mass
+                            float kt = obja->inv_mass + objb->inv_mass + rt_a*rt_a * obja->inv_inertia + rt_b*rt_b * objb->inv_inertia;
+                            
+                            // Impulse magnitude
+                            float jt = -Dot(v_rel, t) / kt;
+
+                            // Coulomb friction clamp
+                            float mu = 0.7; // friction val
+                            float max_friction = mu * j;
+                            if(jt < -max_friction) jt = -max_friction;
+                            if(jt > max_friction) jt = max_friction;
+
+                            Vector Jt = t * jt;
+
+                            // Linear
+                            obja->velocity = obja->velocity - Jt * obja->inv_mass;
+                            objb->velocity = objb->velocity + Jt * objb->inv_mass;
+
+                            // Angular
+                            obja->angular_velocity = obja->angular_velocity - Cross(ra, Jt) * obja->inv_inertia;
+                            objb->angular_velocity = objb->angular_velocity - Cross(rb, Jt) * objb->inv_inertia;
+                        }
+                    }
+                }
+
+                itb++;
+            }
         }
     }
 }

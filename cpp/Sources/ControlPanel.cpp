@@ -11,8 +11,9 @@ namespace ControlPanel {
     static bool draggingGravity = false;
     static bool draggingFriction = false;
 
-    void Init() {
+    void Init(PhaseEngine* engine) {
         panelRect = { (float)(GetScreenWidth() - panelWidth), 0.0f, (float)panelWidth, (float)GetScreenHeight() };
+        engine->SetGravity(gravityNorm * 20.0f);
     }
 
     static float clampf(float v, float a, float b) { return (v < a) ? a : (v > b) ? b : v; }
@@ -46,8 +47,8 @@ namespace ControlPanel {
             if (draggingGravity) {
                 float nx = (local.x - 20.0f) / trackW;
                 gravityNorm = clampf(nx, 0.0f, 1.0f);
-                // Map normalized gravity to engine units: 0..2000
-                engine->SetGravity(gravityNorm * 2000.0f);
+                // Map normalized gravity to engine units: 0..20
+                engine->SetGravity(gravityNorm * 20.0f);
             }
             if (draggingFriction) {
                 float nx = (local.x - 20.0f) / trackW;
@@ -85,7 +86,7 @@ namespace ControlPanel {
 
         // numeric values
         char buf[64];
-        sprintf(buf, "%.0f", gravityNorm * 2000.0f);
+        sprintf(buf, "%.0f", gravityNorm * 20.0f);
         DrawText(buf, (int)panel.x + 10, (int)panel.y + 60, 14, BLACK);
         sprintf(buf, "%.2f", frictionNorm * 5.0f);
         DrawText(buf, (int)panel.x + 10, (int)panel.y + 140, 14, BLACK);

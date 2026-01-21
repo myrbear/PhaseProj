@@ -14,7 +14,7 @@ int main()
 
     // Initialize sidebar
     Sidebar::Init();
-    ControlPanel::Init();
+    ControlPanel::Init(&engine);
 
     engine.Run();
 

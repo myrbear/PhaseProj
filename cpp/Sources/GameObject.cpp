@@ -24,7 +24,7 @@ GameObject::GameObject(int _id, float _s, float _mass, bool _is_static, int _col
     }
     else {
         inv_mass = 1 / mass;
-        inertia = mass * side * side / 6 / 32;
+        inertia = mass * side * side / 6 / 8;
         inv_inertia = 1 / inertia;
     }
 
@@ -78,6 +78,9 @@ bool Collide(GameObject* obja, GameObject* objb, CollisionInfo* info) {
     
     if(!collision) return false;
 
+    float a_rotation = obja->rotation;
+    float b_rotation = objb->rotation;
+
     // Collision (Separating Axis Theorem)
     CollisionInfo info_a;
     CollisionInfo info_b;
@@ -85,13 +88,73 @@ bool Collide(GameObject* obja, GameObject* objb, CollisionInfo* info) {
     AxisSeparation(objb, obja, &info_b);
 
     if(info_a.penetration_depth < info_b.penetration_depth) {
-        // Use A's normal
+        // Use A's normal (Contact point is one of b's vertices)
         *info = info_a;
+        float mass_factor = objb->mass / (obja->inv_mass + objb->inv_mass);
+        info->contact_point = info->contact_point + (info->contact_normal * info->penetration_depth * mass_factor);
     }
     else {
         // Use B's normal (and flip it, contact normal is A->B)
+        // (Contact point is one of a's vertices)
         info_b.contact_normal = -info_b.contact_normal;
         *info = info_b;
+        float mass_factor = obja->mass / (obja->inv_mass + objb->inv_mass);
+        info->contact_point = info->contact_point - (info->contact_normal * info->penetration_depth * mass_factor);
+    }
+
+    // Check for aligned sides
+    while(a_rotation > 90) a_rotation -= 90;
+    while(b_rotation > 90) b_rotation -= 90;
+
+    if(a_rotation == b_rotation) {
+        // Sides aligned
+        RotationMatrix rev_ra = obja->GetReverseRotationMatrix();
+        RotationMatrix rev_rb = objb->GetReverseRotationMatrix();
+        float a_side = obja->GetSide();
+        float b_side = objb->GetSide();
+        float side_ratio = a_side / (a_side + b_side);
+
+        Vector t_a_pos = TransformPoint(obja->position, rev_ra);
+        Vector t_b_pos = TransformPoint(objb->position, rev_rb);
+
+        float dx = t_b_pos.x - t_a_pos.x;
+        float dy = t_b_pos.y - t_a_pos.y;
+
+        if(a_side/2 > abs(dx) + b_side/2) {
+            Vector t_contact_point;
+            t_contact_point.x = t_b_pos.x;
+            t_contact_point.y = t_a_pos.y + dy*side_ratio;
+
+            info->contact_point = TransformPoint(t_contact_point, ra);
+        }
+        else if(b_side/2 > abs(dx) + a_side/2) {
+            Vector t_contact_point;
+            t_contact_point.x = t_a_pos.x;
+            t_contact_point.y = t_a_pos.y + dy*side_ratio;
+
+            info->contact_point = TransformPoint(t_contact_point, ra);
+        }
+        else if(a_side/2 > abs(dy) + b_side/2) {
+            Vector t_contact_point;
+            t_contact_point.x = t_a_pos.x + dx*side_ratio;
+            t_contact_point.y = t_b_pos.y;
+
+            info->contact_point = TransformPoint(t_contact_point, ra);
+        }
+        else if(b_side/2 > abs(dy) + a_side/2) {
+            Vector t_contact_point;
+            t_contact_point.x = t_a_pos.x + dx*side_ratio;
+            t_contact_point.y = t_a_pos.y;
+
+            info->contact_point = TransformPoint(t_contact_point, ra);
+        }
+        else {
+            Vector t_contact_point;
+            t_contact_point.x = t_a_pos.x + dx*side_ratio;
+            t_contact_point.y = t_a_pos.y + dy*side_ratio;
+
+            info->contact_point = TransformPoint(t_contact_point, ra);
+        }
     }
 
     return true;
@@ -165,29 +228,25 @@ bool AxisSeparation(GameObject* obja, GameObject* objb, CollisionInfo *info) {
         Vector normal = ra.GetXNormal();
         info->contact_normal = normal;
         Vector vertex = b_vertices[b_min_x_index];
-        Vector point_a_space = vertex - (normal * mass_factor);
-        info->contact_point = TransformPoint(point_a_space, ra);
+        info->contact_point = TransformPoint(vertex, ra);
     }
     else if(min_overlap == x_neg_overlap) {
         Vector normal = -(ra.GetXNormal());
         info->contact_normal = normal;
         Vector vertex = b_vertices[b_max_x_index];
-        Vector point_a_space = vertex - (normal * mass_factor);
-        info->contact_point = TransformPoint(point_a_space, ra);
+        info->contact_point = TransformPoint(vertex, ra);
     }
     else if(min_overlap == y_pos_overlap) {
         Vector normal = ra.GetYNormal();
         info->contact_normal = normal;
         Vector vertex = b_vertices[b_min_y_index];
-        Vector point_a_space = vertex - (normal * mass_factor);
-        info->contact_point = TransformPoint(point_a_space, ra);
+        info->contact_point = TransformPoint(vertex, ra);
     }
     else if(min_overlap == y_neg_overlap) {
         Vector normal = -(ra.GetYNormal());
         info->contact_normal = normal;
         Vector vertex = b_vertices[b_max_y_index];
-        Vector point_a_space = vertex - (normal * mass_factor);
-        info->contact_point = TransformPoint(point_a_space, ra);
+        info->contact_point = TransformPoint(vertex, ra);
     }
 
     info->penetration_depth = min_overlap;

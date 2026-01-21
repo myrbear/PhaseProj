@@ -6,7 +6,7 @@
 
 namespace ControlPanel {
     // Initialize panel resources
-    void Init();
+    void Init(PhaseEngine *engine);
 
     // Update panel; will call engine setters as sliders move
     void Update(PhaseEngine* engine);

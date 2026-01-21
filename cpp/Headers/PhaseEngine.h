@@ -19,6 +19,7 @@
 #include <mmsystem.h>
 
 #define FRAME_RATE 60
+#define MAX_ITERATIONS 5
 
 #define DEBUG
 
